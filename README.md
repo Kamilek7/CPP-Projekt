@@ -4,8 +4,8 @@
 # 21.10.24r. - zainstalowanie VS
 # 28.10.24r. - nauka VS
 # 04.11.24r. - napisanie Hello World
-# 11.11.24r. - dodanie komentarzy
-# 18.11.24r. - świętujemy niepodleglosc
+# 11.11.24r. - świetujemy niepodleglosc
+# 18.11.24r. - dodanie komentarzy
 # 25.11.24r. - czytamy dokumentacje c++
 # 02.12.24r. - święta przed urodzinami
 # 09.12.24r. - spotkanie z wujkiem Krzysiem

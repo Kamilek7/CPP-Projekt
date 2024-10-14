@@ -1,0 +1,29 @@
+﻿  object.cpp
+C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\OpenGL\object.cpp(13,33): warning C4244: "=": konwersja z "double" do "T", możliwa utrata danych
+C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\OpenGL\object.cpp(13,33): warning C4244:         with
+C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\OpenGL\object.cpp(13,33): warning C4244:         [
+C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\OpenGL\object.cpp(13,33): warning C4244:             T=float
+C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\OpenGL\object.cpp(13,33): warning C4244:         ]
+x64\Release\vao.obj : warning LNK4042: obiekt określono więcej niż raz; dodatkowe wystąpienia zostały zignorowane
+LINK : warning LNK4098: domyślna biblioteka „MSVCRTD” powoduje konflikt z innymi bibliotekami; użyj opcji /NODEFAULTLIB:biblioteka
+  Trwa generowanie kodu
+  2 of 949 functions ( 0.2%) were compiled, the rest were copied from previous compilation.
+    0 functions were new in current compilation
+    8 functions had inline decision re-evaluated but remain unchanged
+  Zakończono generowanie kodu
+glfw3.lib(context.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(context.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(input.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(input.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(init.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(init.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(window.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(window.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_thread.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_thread.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_window.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_window.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_joystick.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_joystick.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_time.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_time.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_init.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_init.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(win32_monitor.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(win32_monitor.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(monitor.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(monitor.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(vulkan.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(vulkan.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(wgl_context.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(wgl_context.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(egl_context.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(egl_context.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+glfw3.lib(osmesa_context.obj) : warning LNK4099: nie znaleziono pliku PDB „” z elementem „glfw3.lib(osmesa_context.obj)” lub w pozycji „”; obiekt zostanie skonsolidowany bez informacji debugowania
+  OpenGL.vcxproj -> C:\Users\kamil\Documents\projekty\moje projekty\Cpp\Bootleg Project\OpenGL\x64\Release\OpenGL.exe

@@ -1,7 +1,7 @@
 # CPP-Projekt
 
 ## 14.10.24r. - Pobieranie modeli i stworzenie początkowej mapy
-## 21.10.24r. - Utworzenie kolizji
+## 21.10.24r. - Utworzenie jakiegos logicznego podzialu klas, poczatki do kolizji (byc moze trzeba bedzie pobrac do tego jakies biblioteki w stylu box2d?)
 ## 28.10.24r. - 
 ## 04.11.24r. - 
 ## 11.11.24r. - 

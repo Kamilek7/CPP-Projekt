@@ -4,6 +4,7 @@
 #include "model.h"
 class ingameObject
 {
+protected:
 	float time;
 	glModel model;
 

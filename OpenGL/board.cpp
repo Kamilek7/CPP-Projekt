@@ -6,7 +6,7 @@ GameComponents::GameComponents()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "sraka", NULL, NULL);
+	window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Engine Test", NULL, NULL);
 	glfwMakeContextCurrent(window);
 	gladLoadGL();
 	glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -15,12 +15,11 @@ GameComponents::GameComponents()
 	glUniform4f(glGetUniformLocation(shaderProgram.program, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	glEnable(GL_DEPTH_TEST);
-	glEnable(GL_CULL_FACE);
-	glCullFace(GL_FRONT);
-	glFrontFace(GL_CW);
 	camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
-	objects.push_back(new ingameObject("resources/sbunny/scene.gltf", &importer));
-	/*objects.push_back(new ingameObject("resources/bonetest/test.gltf", &importer));*/
+	//objects.push_back(new ingameObject("resources/ground/scene.gltf", &importer));
+	objects.push_back(new physicsObject("resources/sbunny/scene.gltf", &importer));
+	objects.push_back(new physicsObject("resources/sbunny/scene.gltf", &importer));
+	objects.push_back(new Grounds(&importer));
 }
 
 void GameComponents::render()

@@ -69,6 +69,7 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
     {
         aiMaterial* material = scene->mMaterials[mesh->mMaterialIndex];
         std::vector<Texture> diffuseMaps = loadTextures(material, aiTextureType_DIFFUSE, "diffuse");
+
         textures.insert(textures.end(), diffuseMaps.begin(), diffuseMaps.end());
         std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, "specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
@@ -85,6 +86,7 @@ std::vector<Texture> modelImporter::loadTextures(aiMaterial* mat, aiTextureType 
 
     for (unsigned int i = 0; i < mat->GetTextureCount(type); i++)
     {
+        
         aiString str;
         mat->GetTexture(type, i, &str);
         std::string name = str.C_Str();

@@ -1,14 +1,14 @@
 #ifndef NPC_H_
 
-#define GROUNDS_H_
+#define NPC_H_
 
-#include "nonPhysicsObject.h"
-class Grounds :public nonPhysicsObject
+#include "physicsObject.h"
+class NPC :public physicsObject
 {
 public:
-	Grounds(modelImporter* importer) :nonPhysicsObject("resources/ground2/scene.gltf", importer)
+	NPC(modelImporter* importer) :physicsObject("resources/kleiner/klener.obj", importer)
 	{
-		double scale = 0.04;
+		double scale = 0.005;
 		this->model.scale = glm::vec3(scale, scale, scale);
 	}
 };

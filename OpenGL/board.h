@@ -2,7 +2,7 @@
 #define BOARD_H
 	
 #include"grounds.h"
-#include"physicsObject.h"
+#include "npc.h"
 
 class GameComponents
 {

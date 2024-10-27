@@ -16,8 +16,7 @@ GameComponents::GameComponents()
 	glUniform3f(glGetUniformLocation(shaderProgram.program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	glEnable(GL_DEPTH_TEST);
 	camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
-	//objects.push_back(new ingameObject("resources/ground/scene.gltf", &importer));
-	objects.push_back(new physicsObject("resources/kleiner/klener.obj", &importer));
+	objects.push_back(new NPC( & importer));
 	objects.push_back(new physicsObject("resources/sbunny/scene.gltf", &importer));
 	objects.push_back(new Grounds(&importer));
 }

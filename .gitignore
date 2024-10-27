@@ -96,3 +96,4 @@
 /x64/Debug/OpenGL.pdb
 /x64/Release/OpenGL.exe
 /x64/Release/OpenGL.pdb
+*.wsuo

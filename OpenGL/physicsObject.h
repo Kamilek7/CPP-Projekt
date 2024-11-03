@@ -2,11 +2,44 @@
 
 #define PHYSICALOBJECT_H_
 
-#include <Jolt/jolt.h>
-#include "object.h"
+#include "physicsApplied.h"
+
 class physicsObject :public ingameObject
 {
+	glm::vec3 size;
+	Physics* phys;
+	RigidBody* body;
 public:
-	physicsObject(const char* name, modelImporter* importer) :ingameObject(name, importer) {};
+	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(1.0,1.0,1.0), bool dynamic=true) :ingameObject(name, importer) 
+	{
+		this->size = size;
+		this->phys = _phys;
+		this->body = phys->linkBody(size, dynamic);
+	};
+	void process(float dt, Shader& shader, Camera& camera)
+	{
+		this->getInfoFromPhys();
+		ingameObject::process(dt, shader, camera);
+		
+		
+	}
+	void getInfoFromPhys()
+	{
+		InfoPack pack = phys->getInfoOnBody(this->body);
+		this->model.translation = pack.position;
+
+	}
+	void translate(double x = 0.0, double y = 0.0, double z = 0.0, double scale = 1.0)
+	{
+		ingameObject::translate(x, y, z, scale);
+		const reactphysics3d::Transform transform = this->body->getTransform();
+		Vector3 pos = transform.getPosition();
+		Quaternion quat = transform.getOrientation();
+		pos.x += x * scale;
+		pos.y += y * scale;
+		pos.z += z * scale;
+		Transform transformNew(pos, quat);
+		this->body->setTransform(transformNew);
+	}
 };
 #endif 

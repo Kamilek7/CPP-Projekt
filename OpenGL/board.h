@@ -2,7 +2,9 @@
 #define BOARD_H
 	
 #include"grounds.h"
-#include "npc.h"
+#include "scientist.h"
+#include "basilisk.h"
+#include "fighter.h"
 
 class GameComponents
 {
@@ -16,6 +18,8 @@ class GameComponents
 	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 	Camera camera;
 	std::vector <ingameObject*> objects;
+
+	Physics phys;
 
 	double previousTime = 0;
 	double duration = 0;

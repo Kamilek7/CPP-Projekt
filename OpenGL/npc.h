@@ -6,10 +6,9 @@
 class NPC :public physicsObject
 {
 public:
-	NPC(modelImporter* importer) :physicsObject("resources/kleiner/klener.obj", importer)
+	NPC(const char* name, modelImporter* importer, Physics* phys) :physicsObject(name, importer, phys)
 	{
-		double scale = 0.005;
-		this->model.scale = glm::vec3(scale, scale, scale);
+
 	}
 };
 #endif 

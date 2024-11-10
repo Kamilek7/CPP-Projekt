@@ -4,7 +4,7 @@
 ## 21.10.24r. - Pobieranie modeli i stworzenie początkowej mapy
 ## 28.10.24r. - Utworzenie jakiegos logicznego podzialu klas, poczatki do kolizji (byc moze trzeba bedzie pobrac do tego jakies biblioteki w stylu box2d?)
 ## 04.11.24r. - Implementacja fizyki przy pomocy ReactPhysics3D i proba utworzenia prostych bounding boxow dla modeli
-## 11.11.24r. - Przepisanie wszystkiego do cmake i integracja Dear Imgui
+## 11.11.24r. - Integracja Dear Imgui
 ## 18.11.24r. - Poczatek "podprogramu" w ktorym mozna bedzie dobierac bounding boxy dla poszczegolnych modeli
 ## 25.11.24r. - Poprawienie ruchu "gracza" i wprowadzenie w nim fizyki, poprawienie bounding boxow modeli
 ## 02.12.24r. - 

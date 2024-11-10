@@ -16,5 +16,8 @@ public:
 	glm::vec3 translation;
 	glm::quat rotation;
 	glm::vec3 scale;
+	glm::vec3 linOffset;
+	glm::quat rotOffset;
+
 };
 #endif

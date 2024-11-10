@@ -19,6 +19,13 @@ void ingameObject::scaleBy(double scale)
 	this->model.scale *= scale;
 }
 
+void ingameObject::scaleTo(double x, double y, double z)
+{
+	this->model.scale.x = x;
+	this->model.scale.y = y;
+	this->model.scale.z = z;
+}
+
 
 void ingameObject::process(float dt, Shader& shader, Camera &camera)
 {

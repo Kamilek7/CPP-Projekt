@@ -8,8 +8,9 @@
 
 class GameComponents
 {
-	const unsigned int WINDOW_WIDTH = 800;
-	const unsigned int WINDOW_HEIGHT = 800;
+	const unsigned int WINDOW_WIDTH = 1000;
+	const unsigned int WINDOW_HEIGHT = 1000;
+	int mode = 1;
 	unsigned int MAX_FPS = 120;
 	double fpsTime = 1 / double(MAX_FPS);
 	modelImporter importer;

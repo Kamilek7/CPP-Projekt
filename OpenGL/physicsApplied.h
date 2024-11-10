@@ -7,6 +7,7 @@
 struct InfoPack
 {
 	glm::vec3 position;
+	glm::quat orientation;
 };
 
 
@@ -44,7 +45,7 @@ public:
 		collider = body->addCollider(boxShape, transform);
 		return body;
 	}
-	InfoPack getInfoOnBody(RigidBody* body)
+	InfoPack getInfoOnBody(RigidBody* body, bool disableRotation)
 	{
 		const Transform& transform = body->getTransform();
 		const Vector3& position = transform.getPosition();
@@ -56,6 +57,16 @@ public:
 		temp.y = position.y;
 		temp.z = position.z;
 		package.position = temp;
+		if (!disableRotation)
+		{
+			glm::quat temp1;
+			temp1.w = orientation.w;
+			temp1.x = orientation.x;
+			temp1.y = orientation.y;
+			temp1.z = orientation.z;
+			package.orientation = temp1;
+		}
+
 		return package;
 	}
 	void process(double timeStep)

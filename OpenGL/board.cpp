@@ -1,4 +1,6 @@
 #include "board.h"
+#include <cstdlib>
+#include <ctime>
 
 GameComponents::GameComponents()
 {
@@ -39,9 +41,12 @@ GameComponents::GameComponents()
 		objects[i]->translate(-0.8 + double(i * 0.6),0.2);
 	}
 	
-	
 	objects.push_back(new Grounds(&importer, &phys));
-	objects[objects.size() - 1]->translate(0,-2,0);
+	objects[objects.size() - 1]->translate(0, -0.2, 0);
+
+
+
+
 }
 
 void GameComponents::render()

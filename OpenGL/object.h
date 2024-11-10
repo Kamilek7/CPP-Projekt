@@ -15,6 +15,8 @@ public:
 
 	virtual void scaleBy(double scale=1.0);
 
+	virtual void scaleTo(double x, double y, double z);
+
 	virtual void process(float dt, Shader& shader, Camera& camera);
 };
 #endif

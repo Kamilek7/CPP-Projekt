@@ -10,7 +10,7 @@ public:
 	{
 		double scale = 0.2;
 		this->model.scale = glm::vec3(scale, scale, scale);
-		this->model.translation.y = 0.2;
+		this->model.linOffset.y = 0.2;
 	}
 };
 #endif 

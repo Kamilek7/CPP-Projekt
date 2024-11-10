@@ -8,13 +8,12 @@ class physicsObject :public ingameObject
 {
 	glm::vec3 size;
 	Physics* phys;
-	RigidBody* body;
-	bool dRotation;
+	
 
 public:
+	RigidBody* body;
 	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(0.1,0.1,0.1), bool dynamic=true) :ingameObject(name, importer) 
 	{
-		dRotation = false;
 		this->size = size;
 		this->phys = _phys;
 		this->body = phys->linkBody(size, dynamic);
@@ -29,15 +28,10 @@ public:
 	}
 	void getInfoFromPhys()
 	{
-		InfoPack pack = phys->getInfoOnBody(this->body, dRotation);
+		InfoPack pack = phys->getInfoOnBody(this->body);
 		
 		this->model.translation = pack.position;
-		if (!dRotation) {
-			
-			this->model.rotation = pack.orientation;
-		}
-
-		
+		this->model.rotation = pack.orientation;
 
 	}
 	void translate(double x = 0.0, double y = 0.0, double z = 0.0, double scale = 1.0)
@@ -54,7 +48,7 @@ public:
 	}
 	void disableRotation()
 	{
-		this->dRotation = true;
+		body->setAngularLockAxisFactor(Vector3(1, 0, 1));
 	}
 };
 #endif 

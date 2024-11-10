@@ -21,10 +21,6 @@ public:
 	int width;
 	int height;
 
-	bool firstClick = true;
-
-	float speed = 0.5f;
-	float sensitivity = 100.0f;
 
 	Camera() {};
 	Camera(int width, int height, glm::vec3 position);

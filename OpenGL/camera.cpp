@@ -25,8 +25,7 @@ void Camera::matrix(Shader shader, const char* uniform)
 
 void Camera::inputs(GLFWwindow* window, float dt)
 {
-	// Handles key inputs
-	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	/*if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 	{
 		Position += speed*dt * Orientation;
 	}
@@ -53,7 +52,7 @@ void Camera::inputs(GLFWwindow* window, float dt)
 
 	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
 	{
-		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		
 
 		if (firstClick)
 		{
@@ -81,5 +80,5 @@ void Camera::inputs(GLFWwindow* window, float dt)
 	{
 		glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		firstClick = true;
-	}
+	}*/
 }

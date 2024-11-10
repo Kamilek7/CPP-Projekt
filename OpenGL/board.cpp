@@ -17,6 +17,7 @@ GameComponents::GameComponents()
 	glUniform4f(glGetUniformLocation(shaderProgram.program, "lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
 	glUniform3f(glGetUniformLocation(shaderProgram.program, "lightPos"), lightPos.x, lightPos.y, lightPos.z);
 	glEnable(GL_DEPTH_TEST);
+	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
 	camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
 
 	
@@ -35,7 +36,7 @@ GameComponents::GameComponents()
 
 	objects.push_back(new physicsObject("resources/darkTyrannomon/DarkTyrannomon.obj", &importer, &phys));
 	objects[objects.size()-1]->scaleBy(0.2);
-	objects.push_back(new physicsObject("resources/bartek/untitled.gltf", &importer, &phys));
+
 	for (int i = 0; i < objects.size(); i++)
 	{
 		objects[i]->translate(-0.8 + double(i * 0.6),0.2);
@@ -44,7 +45,7 @@ GameComponents::GameComponents()
 	objects.push_back(new Grounds(&importer, &phys));
 	objects[objects.size() - 1]->translate(0, -0.2, 0);
 
-
+	objects.push_back(new Player(&importer, &phys,window));
 
 
 }
@@ -53,6 +54,7 @@ void GameComponents::render()
 {
 
 	glfwPollEvents();
+	glfwGetWindowSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
 	glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	phys.process(fpsTime);

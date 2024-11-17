@@ -6,11 +6,11 @@
 ## 04.11.24r. - Implementacja fizyki przy pomocy ReactPhysics3D i proba utworzenia prostych bounding boxow dla modeli
 ## 11.11.24r. - Poprawienie ruchu "gracza" i wprowadzenie w nim fizyki
 ## 18.11.24r. - Dorzucenie przeskakiwania miedzy platformami
-## 25.11.24r. - 
-## 02.12.24r. - 
-## 09.12.24r. - 
-## 16.12.24r. - 
-## 23.12.24r. - 
-## 30.12.24r. - 
-## 06.01.25r. - 
-## 13.01.25r. -
+## 25.11.24r. - Poprawa bounding boxow modeli i stworzenie pierwszego wiekszego pokoju
+## 02.12.24r. - Dodanie żyć dla gracza i kolizji między wrogami
+## 09.12.24r. - Programowanie wrogow
+## 16.12.24r. - Zaprogramowanie generacji pokojow
+## 23.12.24r. - Zaprogramowanie generacji pokojow
+## 30.12.24r. - Dorzucenie animacji do modeli
+## 06.01.25r. - Dorzucenie animacji do modeli
+## 13.01.25r. - Koniec

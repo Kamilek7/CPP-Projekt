@@ -8,6 +8,7 @@
 #include "Kleiner.h"
 #include "Tenemon.h"
 #include "Tsunomon.h"
+#include "platform.h"
 #include <cstdlib>
 #include <ctime>
 
@@ -55,6 +56,18 @@ GameComponents::GameComponents()
     // Dodawanie gruntu
     objects.push_back(new Grounds(&importer, &phys));
     objects[objects.size() - 1]->translate(0, -0.2, 0);
+
+    objects.push_back(new Platform(&importer, &phys, glm::vec3(1.0,0.1,1.0)));
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+    objects.push_back(new Platform(&importer, &phys, glm::vec3(1.0, 0.1, 3.0)));
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+    objects.push_back(new Platform(&importer, &phys, glm::vec3(3.0, 0.1, 1.0)));
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+    objects[objects.size() - 1]->translate(1, 0.5, 1);
+
+
 
     // Dodawanie gracza
     objects.push_back(new Player(&importer, &phys, window));

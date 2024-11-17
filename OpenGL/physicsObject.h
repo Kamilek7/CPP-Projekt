@@ -6,6 +6,7 @@
 
 class physicsObject :public ingameObject
 {
+protected:
 	glm::vec3 size;
 	Physics* phys;
 	
@@ -18,6 +19,7 @@ public:
 		this->phys = _phys;
 		this->body = phys->linkBody(size, dynamic);
 		this->body->setAngularDamping(reactphysics3d::decimal(1));
+
 	};
 	void process(float dt, Shader& shader, Camera& camera)
 	{
@@ -40,6 +42,7 @@ public:
 		const reactphysics3d::Transform transform = this->body->getTransform();
 		Vector3 pos = transform.getPosition();
 		Quaternion quat = transform.getOrientation();
+
 		pos.x += x * scale;
 		pos.y += y * scale;
 		pos.z += z * scale;
@@ -48,7 +51,7 @@ public:
 	}
 	void disableRotation()
 	{
-		body->setAngularLockAxisFactor(Vector3(1, 0, 1));
+		body->setAngularLockAxisFactor(Vector3(0, 0, 0));
 	}
 };
 #endif 

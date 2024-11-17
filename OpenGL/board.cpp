@@ -73,7 +73,6 @@ void GameComponents::render()
 	}
 
 	duration = 0;
-	camera.inputs(window, (float)fpsTime);
 	Clock += (float)fpsTime;
 	glfwSwapBuffers(window);
 	previousTime = glfwGetTime();

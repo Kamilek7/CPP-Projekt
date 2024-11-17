@@ -14,49 +14,57 @@ public:
 	{
 		this->window = _window;
 		this->disableRotation();
+		this->model.linOffset.y += 0.25;
+		this->model.scale = glm::vec3(0.5, 0.5, 0.5);
 	}
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
+
+
 		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		{
+
 			glm::vec3 temp = camera.Orientation;
-			Vector3 vec(temp.x, temp.y, temp.z);
+			Vector3 vec(temp.x, 0, temp.z);
+			vec = vec * (glm::length(temp)) / vec.length();
+			body->setLinearVelocity(vec);
+			
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		{
+			glm::vec3 temp = -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
+			Vector3 vec(temp.x, 0, temp.z);
+			vec = vec * (glm::length(temp)) / vec.length();
+			body->setLinearVelocity(vec);
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		{
+			glm::vec3 temp = -camera.Orientation;
+			Vector3 vec(temp.x, 0, temp.z);
+			vec = vec * (glm::length(temp)) / vec.length();
+			body->setLinearVelocity(vec);
+
+		}
+		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		{
+			glm::vec3 temp = glm::normalize(glm::cross(camera.Orientation, camera.Up));;
+			Vector3 vec(temp.x, 0, temp.z);
+			vec = vec * (glm::length(temp)) / vec.length();
 			body->setLinearVelocity(vec);
 		}
+
+		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		{
+			glm::vec3 temp = camera.Up;
+			Vector3 vec(0, temp.y, 0);
+			body->setLinearVelocity(vec);
+		}
+
 		camera.Position = this->model.translation;
-		//if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		//{
-		//	Position += speed*dt * -glm::normalize(glm::cross(Orientation, Up));
-		//}
-		//if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		//{
-		//	Position += speed*dt * -Orientation;
-		//}
-		//if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		//{
-		//	Position += speed*dt * glm::normalize(glm::cross(Orientation, Up));
-		//}
-		//if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
-		//{
-		//	Position += speed*dt * Up;
-		//}
-		//if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
-		//{
-		//	Position += speed*dt * -Up;
-		//}
-
-		//camera.Position = this->model.translation;
-		//if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-		//{
-
-
-		//	if (firstClick)
-		//	{
-		//		glfwSetCursorPos(window, (width / 2), (height / 2));
-		//		firstClick = false;
-		//	}
 
 		glfwGetWindowSize(window, &width, &height);
 		double mouseX;

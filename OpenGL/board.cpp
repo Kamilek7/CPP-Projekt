@@ -29,29 +29,24 @@ GameComponents::GameComponents()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
 
-    // Dodawanie obiektów za pomocą nowych klas
+    // Dodawanie obiekt�w za pomoc� nowych klas
     objects.push_back(new Aquamon(&importer, &phys));
     objects.push_back(new Aquilamon(&importer, &phys));
     objects.push_back(new BlackAqumon(&importer, &phys));
     objects.push_back(new Tenemon(&importer, &phys));
     objects.push_back(new Tsunomon(&importer, &phys));
 
-    // Dodawanie istniejących obiektów
+    // Dodawanie istniej�cych obiekt�w
     objects.push_back(new Scientist(&importer, &phys));
     objects.push_back(new Basilisk(&importer, &phys));
     objects.push_back(new Fighter(&importer, &phys));
 
-    // Dodawanie DarkTyrannomon za pomocą nowej klasy
+    // Dodawanie DarkTyrannomon za pomoc� nowej klasy
     objects.push_back(new DarkTyrannomon(&importer, &phys));
 
-    // Skalowanie obiektów
-    for (int i = 0; i < objects.size(); i++)
-    {
-        objects[i]->scaleBy(0.1); // Skalowanie dla większości obiektów
-    }
     objects[objects.size() - 1]->scaleBy(0.2); // Inne skalowanie dla DarkTyrannomon
 
-    // Pozycjonowanie obiektów
+    // Pozycjonowanie obiekt�w
     for (int i = 0; i < objects.size(); i++)
     {
         objects[i]->translate(-0.8 + double(i * 0.6), 0.2);
@@ -86,11 +81,10 @@ void GameComponents::render()
         duration = current - previousTime;
     }
 
-    duration = 0;
-    camera.inputs(window, (float)fpsTime);
-    Clock += (float)fpsTime;
-    glfwSwapBuffers(window);
-    previousTime = glfwGetTime();
+	duration = 0;
+	Clock += (float)fpsTime;
+	glfwSwapBuffers(window);
+	previousTime = glfwGetTime();
 }
 
 void GameComponents::end()

@@ -1,16 +1,5 @@
 #include "board.h"
-#include "Aquamon.h"
-#include "Aquilamon.h"
-#include "Bartek.h"
-#include "BlackAqumon.h"
-#include "ColliderCube.h"
-#include "DarkTyrannomon.h"
-#include "Kleiner.h"
-#include "Tenemon.h"
-#include "Tsunomon.h"
-#include "platform.h"
-#include <cstdlib>
-#include <ctime>
+
 
 GameComponents::GameComponents()
 {

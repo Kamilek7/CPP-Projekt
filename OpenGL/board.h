@@ -6,6 +6,15 @@
 #include "basilisk.h"
 #include "fighter.h"
 #include "player.h"
+#include "Aquamon.h"
+#include "Aquilamon.h"
+#include "BlackAqumon.h"
+#include "DarkTyrannomon.h"
+#include "Tenemon.h"
+#include "Tsunomon.h"
+#include "platform.h"
+#include <cstdlib>
+#include <ctime>
 
 class GameComponents
 {

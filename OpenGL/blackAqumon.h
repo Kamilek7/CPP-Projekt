@@ -5,7 +5,7 @@
 
 class BlackAqumon : public Monster {
 public:
-    BlackAqumon(modelImporter* importer, Physics* phys) : Monster("resources/blackAgumon/blackAgumon.obj", importer, phys) {
+    BlackAqumon(modelImporter* importer, Physics* phys) : Monster("resources/blackAgumon/blackAgumon.obj", importer, phys, glm::vec3(0.1, 0.1, 0.1)) {
         double scale = 0.1;
         this->model.scale = glm::vec3(scale, scale, scale);
     }

@@ -5,7 +5,7 @@
 
 class Aquilamon : public Monster {
 public:
-    Aquilamon(modelImporter* importer, Physics* phys) : Monster("resources/aquilamon/aquilamon.obj", importer, phys) {
+    Aquilamon(modelImporter* importer, Physics* phys) : Monster("resources/aquilamon/aquilamon.obj", importer, phys, glm::vec3(0.1, 0.1, 0.1)) {
         double scale = 0.15;
         this->model.scale = glm::vec3(scale, scale, scale);
     }

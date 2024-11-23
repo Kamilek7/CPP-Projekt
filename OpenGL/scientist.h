@@ -6,7 +6,7 @@
 class Scientist :public Human
 {
 public:
-	Scientist(modelImporter* importer, Physics* phys) : Human("resources/kleiner/klener.obj", importer, phys)
+	Scientist(modelImporter* importer, Physics* phys) : Human("resources/kleiner/klener.obj", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		double scale = 0.005;
 		this->model.scale = glm::vec3(scale, scale, scale);

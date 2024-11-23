@@ -13,7 +13,7 @@ class Player :public physicsObject
 	int iters = 0;
 	bool collisionTest = false;
 public:
-	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys)
+	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		this->window = _window;
 		this->disableRotation();

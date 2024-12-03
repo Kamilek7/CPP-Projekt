@@ -1,6 +1,6 @@
 {
 	"asset":{
-		"generator":"Khronos glTF Blender I/O v4.2.70",
+		"generator":"Khronos glTF Blender I/O v4.3.47",
 		"version":"2.0"
 	},
 	"scene":0,
@@ -56,8 +56,8 @@
 	"images":[
 		{
 			"mimeType":"image/png",
-			"name":"flop",
-			"uri":"flop.png"
+			"name":"brick",
+			"uri":"brick.png"
 		}
 	],
 	"accessors":[
@@ -131,7 +131,7 @@
 	"buffers":[
 		{
 			"byteLength":840,
-			"uri":"flop.bin"
+			"uri":"mur.bin"
 		}
 	]
 }

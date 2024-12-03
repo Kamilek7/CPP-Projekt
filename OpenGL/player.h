@@ -9,10 +9,11 @@ class Player :public physicsObject
 	GLFWwindow* window;
 	int height;
 	int width;
-
 	int iters = 0;
+	double cooldown = 5;
 	bool collisionTest = false;
 public:
+	int lives = 3;
 	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		this->window = _window;
@@ -105,6 +106,11 @@ public:
 
 		}
 
+		if (cooldown < 6)
+		{
+			cooldown += dt;
+		}
+
 		camera.Position = this->model.translation;
 
 		glfwGetWindowSize(window, &width, &height);
@@ -133,5 +139,28 @@ public:
 
 
 	}
+	void collidedWith(Body* bd) 
+	{
+		if (this->body->getLinearVelocity().y < -0.1)
+			((*(std::vector <physicsObject*>*)(bd->getUserData()))[0])->collidedWithPlayer();
+	}
+
+	void collidedWithMonster()
+	{
+		
+		if(lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
+		{
+			lives--;
+			std::cout << "Straci³eœ ¿ycie!" << std::endl;
+			cooldown = 0;
+		}
+		
+	}
+
+	bool isDead()
+	{
+		return lives == 0;
+	}
+
 };
 #endif 

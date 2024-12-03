@@ -11,5 +11,14 @@ public:
 		double scale = 0.005;
 		this->model.scale = glm::vec3(scale, scale, scale);
 	}
+	void collidedWith(Body* bd)
+	{
+		std::vector <physicsObject*> test = *(std::vector <physicsObject*>*)(bd->getUserData());
+		((*(std::vector <physicsObject*>*)(bd->getUserData()))[0])->collidedWithMonster();
+	}	
+	void collidedWithPlayer()
+	{
+		this->dead = true;
+	}
 };
 #endif 

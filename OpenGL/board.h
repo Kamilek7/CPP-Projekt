@@ -12,9 +12,10 @@
 #include "DarkTyrannomon.h"
 #include "Tenemon.h"
 #include "Tsunomon.h"
-#include "platform.h"
+#include "room.h"
 #include <cstdlib>
 #include <ctime>
+#include "collisionListener.h"
 
 class GameComponents
 {
@@ -29,6 +30,7 @@ class GameComponents
 	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 	Camera camera;
 	std::vector <ingameObject*> objects;
+	std::vector <Room*> rooms;
 
 	Physics phys;
 
@@ -36,6 +38,8 @@ class GameComponents
 	double duration = 0;
 	double Clock = 0;
 	double current = 0;
+
+	MyCollisionListener listener;
 
 public:
 	GLFWwindow* window;

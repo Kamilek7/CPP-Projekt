@@ -16,7 +16,7 @@ using namespace reactphysics3d;
 
 class Physics
 {
-
+	int numObj = 0;
 	
 public:
 	PhysicsCommon physicsCommon;
@@ -35,7 +35,6 @@ public:
 		BoxShape* boxShape = physicsCommon.createBoxShape(halfExtents);
 
 		RigidBody* body = world->createRigidBody(transform);
-
 		
 		if (!dynamic)
 			body->setType(BodyType::STATIC);
@@ -43,8 +42,13 @@ public:
 			body->setType(BodyType::DYNAMIC);
 		Collider* collider;
 		collider = body->addCollider(boxShape, transform);
+
+		numObj += 1;
 		return body;
+
 	}
+
+
 	InfoPack getInfoOnBody(RigidBody* body)
 	{
 		const Transform& transform = body->getTransform();

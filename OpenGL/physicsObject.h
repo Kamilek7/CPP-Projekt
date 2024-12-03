@@ -4,12 +4,13 @@
 
 #include "physicsApplied.h"
 
+
 class physicsObject :public ingameObject
 {
 protected:
 	glm::vec3 size;
 	Physics* phys;
-	
+	std::vector <physicsObject*> thisObject;
 
 public:
 	RigidBody* body;
@@ -20,12 +21,17 @@ public:
 		this->body = phys->linkBody(size, dynamic);
 		this->body->setAngularDamping(reactphysics3d::decimal(1));
 
+		
+		thisObject.push_back(this);
+
+		this->body->setUserData((void*)( & thisObject));
+
 	};
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
-		
+
 		
 	}
 	void getInfoFromPhys()
@@ -53,5 +59,9 @@ public:
 	{
 		body->setAngularLockAxisFactor(Vector3(0, 0, 0));
 	}
+
+	virtual void collidedWith(Body* bd) { }
+	virtual void collidedWithMonster() {}
+	virtual void collidedWithPlayer() {}
 };
 #endif 

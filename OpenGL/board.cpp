@@ -19,6 +19,8 @@ GameComponents::GameComponents()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
 
+    rooms.push_back(new Room(glm::vec3(0, -0.3, 0), glm::vec3(10.0, 4.0, 10.0), &importer, &phys));
+
     // Dodawanie obiekt�w za pomoc� nowych klas
     objects.push_back(new Aquamon(&importer, &phys));
     objects.push_back(new Aquilamon(&importer, &phys));
@@ -34,32 +36,17 @@ GameComponents::GameComponents()
     // Dodawanie DarkTyrannomon za pomoc� nowej klasy
     objects.push_back(new DarkTyrannomon(&importer, &phys));
 
-    objects[objects.size() - 1]->scaleBy(0.2); // Inne skalowanie dla DarkTyrannomon
-
     // Pozycjonowanie obiekt�w
     for (int i = 0; i < objects.size(); i++)
     {
         objects[i]->translate(-0.8 + double(i * 0.6), 0.2);
     }
 
-    // Dodawanie gruntu
-    objects.push_back(new Grounds(&importer, &phys));
-    objects[objects.size() - 1]->translate(0, -0.2, 0);
-
-    objects.push_back(new Platform(&importer, &phys, glm::vec3(1.0,0.1,1.0)));
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-    objects.push_back(new Platform(&importer, &phys, glm::vec3(1.0, 0.1, 3.0)));
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-    objects.push_back(new Platform(&importer, &phys, glm::vec3(3.0, 0.1, 1.0)));
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-    objects[objects.size() - 1]->translate(1, 0.5, 1);
-
-
-
     // Dodawanie gracza
     objects.push_back(new Player(&importer, &phys, window));
+    
+    listener.init(&objects);
+    this->phys.world->setEventListener(&listener);
 }
 
 void GameComponents::render()
@@ -74,7 +61,20 @@ void GameComponents::render()
     for (int i = 0; i < objects.size(); i++)
     {
         objects[i]->process(fpsTime, shaderProgram, camera);
+        if (objects[i]->isDead())
+        {
+
+            delete objects[i];
+            objects[i] = nullptr;
+            objects.erase(objects.begin() + i);
+            i--;
+        }
     }
+    for (int i = 0; i < rooms.size(); i++)
+    {
+        rooms[i]->process(fpsTime, shaderProgram, camera);
+    }
+
 
     // Ograniczenie FPS
     while (duration <= fpsTime)

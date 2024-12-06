@@ -31,7 +31,6 @@
 /OpenGL/OpenGL.vcxproj
 /OpenGL/OpenGL.vcxproj.filters
 *.mtl
-*.obj
 /OpenGL/x64/Debug/camera.obj
 /OpenGL/x64/Debug/ebo.obj
 /OpenGL/x64/Debug/glad.obj

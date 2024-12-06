@@ -96,3 +96,6 @@
 /x64/Release/OpenGL.exe
 /x64/Release/OpenGL.pdb
 *.wsuo
+/OpenGL/x64/Debug/board.obj
+/OpenGL/x64/Debug/import.obj
+/OpenGL/x64/Debug/object.obj

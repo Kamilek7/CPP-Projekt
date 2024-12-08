@@ -1,11 +1,12 @@
+#include "import.h"
 
+#include <iostream>
 #include "board.h"
-
 
 int main()
 {
-
 	GameComponents game;
+
 
 	while (!glfwWindowShouldClose(game.window))
 	{
@@ -14,3 +15,4 @@ int main()
 	game.end();
 	return 0;
 }
+

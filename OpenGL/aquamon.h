@@ -7,7 +7,7 @@
 class Aquamon :public Monster 
 {
 public:
-    Aquamon(modelImporter* importer, Physics* phys) : Monster("resources/agumon/agumon.obj", importer, phys, glm::vec3(0.1, 0.1, 0.1))
+    Aquamon(modelImporter* importer, Physics* phys) : Monster("resources/agumon/agumon.obj", importer, phys, glm::vec3(0.003, 0.01, 0.001))
     {
         double scale = 0.1;
         this->model.scale = glm::vec3(scale, scale, scale);

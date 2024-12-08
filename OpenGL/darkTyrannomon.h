@@ -5,7 +5,7 @@
 
 class DarkTyrannomon : public Monster {
 public:
-    DarkTyrannomon(modelImporter* importer, Physics* phys) : Monster("resources/darktyrannomon/darkTyrannomon.obj", importer, phys, glm::vec3(0.1, 0.1, 0.1)) {
+    DarkTyrannomon(modelImporter* importer, Physics* phys) : Monster("resources/darktyrannomon/darkTyrannomon.obj", importer, phys, glm::vec3(0.05, 0.1, 0.001)) {
         double scale = 0.18;
         this->model.scale = glm::vec3(scale, scale, scale);
     }

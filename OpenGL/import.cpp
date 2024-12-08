@@ -24,6 +24,7 @@ void modelImporter::crawlNodes(aiNode* node)
     {
         crawlNodes(node->mChildren[i]);
     }
+
 }
 
 Mesh modelImporter::fillMesh(aiMesh* mesh)

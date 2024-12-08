@@ -13,7 +13,6 @@
 /.vs/Projekt-CPP/FileContentIndex/89539ad1-ae28-44e5-8629-af5e2ec2c8ca.vsidx
 /.vs/Projekt-CPP/FileContentIndex/46eb67ab-44d0-4b47-8639-b7ef9dccd70f.vsidx
 *.vsidx
-*.bin
 *.suo
 *.db
 *.db-shm

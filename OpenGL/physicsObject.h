@@ -12,6 +12,7 @@ protected:
 	Physics* phys;
 
 public:
+	
 	RigidBody* body;
 	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(0.1,0.1,0.1), bool dynamic=true) :ingameObject(name, importer) 
 	{
@@ -27,7 +28,6 @@ public:
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
-
 		
 	}
 	void getInfoFromPhys()
@@ -59,5 +59,6 @@ public:
 	virtual void collidedWith(Body* bd) { }
 	virtual void collidedWithMonster() {}
 	virtual void collidedWithPlayer() {}
+	virtual void setPlayerLocation(glm::vec3* pos) {}
 };
 #endif 

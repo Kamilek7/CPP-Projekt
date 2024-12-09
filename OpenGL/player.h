@@ -13,6 +13,7 @@ class Player :public physicsObject
 	double cooldown = 5;
 	bool collisionTest = false;
 public:
+	glm::vec3 location;
 	int lives = 3;
 	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
@@ -117,7 +118,7 @@ public:
 		{
 			cooldown += dt;
 		}
-		std::cout << this->model.translation.x << this->model.translation.y << this->model.translation.z << std::endl;
+
 		camera.Position = this->model.translation;
 
 		glfwGetWindowSize(window, &width, &height);
@@ -137,6 +138,8 @@ public:
 		}
 		camera.Orientation = glm::rotate(camera.Orientation, glm::radians(-rotY), camera.Up);
 		glfwSetCursorPos(window, (width / 2), (height / 2));
+
+		location = this->model.translation;
 	}
 	void getInfoFromPhys()
 	{

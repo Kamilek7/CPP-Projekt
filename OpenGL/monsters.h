@@ -14,7 +14,35 @@ public:
 	void collidedWith(Body* bd)
 	{
 		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
-	}	
+	}
+	void process(float dt, Shader& shader, Camera& camera)
+	{
+		if (this->isDead())
+		{
+			this->phys->world->destroyRigidBody(this->body);
+		}
+		else
+		{
+			this->getInfoFromPhys();
+			ingameObject::process(dt, shader, camera);
+
+
+			if (glm::length(*this->playerPos - this->model.translation) < 3)
+			{
+				this->lookAtPlayer();
+				this->followPlayer();
+			}
+
+		}
+	}
+	void followPlayer()
+	{
+		glm::vec3 temp = glm::normalize(*this->playerPos - this->model.translation);
+		Vector3 vec(temp.x, 0, temp.z);
+
+		vec = vec * (glm::length(temp)) / vec.length();
+		body->applyLocalForceAtCenterOfMass(vec * 2);
+	}
 	void collidedWithPlayer()
 	{
 		this->dead = true;

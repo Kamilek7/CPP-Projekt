@@ -6,7 +6,6 @@
 
 class MyCollisionListener : public EventListener {
 
-    std::vector <ingameObject*>* objectsPtr;
 public:
     virtual void onContact(const CollisionCallback::CallbackData& callbackData) override {
 
@@ -19,10 +18,5 @@ public:
             ((physicsObject*)(bd2->getUserData()))->collidedWith(bd1);
         }
     }
-    void init(std::vector <ingameObject*>* objects)
-    {
-        this->objectsPtr = objects;
-    }
-
 };
 #endif

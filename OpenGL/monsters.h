@@ -13,8 +13,7 @@ public:
 	}
 	void collidedWith(Body* bd)
 	{
-		std::vector <physicsObject*> test = *(std::vector <physicsObject*>*)(bd->getUserData());
-		((*(std::vector <physicsObject*>*)(bd->getUserData()))[0])->collidedWithMonster();
+		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
 	}	
 	void collidedWithPlayer()
 	{

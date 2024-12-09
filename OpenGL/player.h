@@ -23,20 +23,49 @@ public:
 		this->body->setLinearDamping(5);
 
 	}
+
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
 
+		bool w =  glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
+		bool a = (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
+		bool s = (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
+		bool d = (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS);
+		bool space = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+		bool keyboardInput = w || a || s || d;
 
-		if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+
+		if (keyboardInput)
 		{
+			glm::vec3 temp = glm::vec3(0, 0, 0);
+			if (w)
+			{
 
-			glm::vec3 temp = camera.Orientation;
+				temp += camera.Orientation;
+
+			}
+			if (a)
+			{
+				temp += -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
+
+			}
+			if (s)
+			{
+				temp += -camera.Orientation;
+
+			}
+			if (d)
+			{
+				temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
+			}
+			temp = glm::normalize(temp);
+
 			Vector3 vec(temp.x, 0, temp.z);
 
 			glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
-			glm::vec3 test = glm::vec3(1,0,0);
+			glm::vec3 test = glm::vec3(1, 0, 0);
 
 			float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
 
@@ -50,35 +79,12 @@ public:
 			this->model.rotation = rot;
 
 			vec = vec * (glm::length(temp)) / vec.length();
-			body->applyLocalForceAtCenterOfMass(vec*10);
-			
-
-		}
-		if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-		{
-			glm::vec3 temp = -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
-			Vector3 vec(temp.x, 0, temp.z);
-			vec = vec * (glm::length(temp)) / vec.length();
 			body->applyLocalForceAtCenterOfMass(vec * 10);
 
-		}
-		if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
-		{
-			glm::vec3 temp = -camera.Orientation;
-			Vector3 vec(temp.x, 0, temp.z);
-			vec = vec * (glm::length(temp)) / vec.length();
-			body->applyLocalForceAtCenterOfMass(vec * 10);
 
 		}
-		if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-		{
-			glm::vec3 temp = glm::normalize(glm::cross(camera.Orientation, camera.Up));;
-			Vector3 vec(temp.x, 0, temp.z);
-			vec = vec * (glm::length(temp)) / vec.length();
-			body->applyLocalForceAtCenterOfMass(vec * 10);
-		}
 
-		if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+		if (space)
 		{
 			if (abs(body->getLinearVelocity().y) < 0.1)
 			{
@@ -106,11 +112,12 @@ public:
 
 		}
 
+
 		if (cooldown < 6)
 		{
 			cooldown += dt;
 		}
-
+		std::cout << this->model.translation.x << this->model.translation.y << this->model.translation.z << std::endl;
 		camera.Position = this->model.translation;
 
 		glfwGetWindowSize(window, &width, &height);
@@ -142,7 +149,7 @@ public:
 	void collidedWith(Body* bd) 
 	{
 		if (this->body->getLinearVelocity().y < -0.1)
-			((*(std::vector <physicsObject*>*)(bd->getUserData()))[0])->collidedWithPlayer();
+			((physicsObject*)(bd->getUserData()))->collidedWithPlayer();
 	}
 
 	void collidedWithMonster()

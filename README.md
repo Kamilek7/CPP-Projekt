@@ -9,8 +9,8 @@
 ## 25.11.24r. - Poprawa bounding boxow modeli i stworzenie pierwszego wiekszego pokoju
 ## 02.12.24r. - Dodanie żyć dla gracza i kolizji między wrogami
 ## 09.12.24r. - Programowanie wrogow
-## 16.12.24r. - Zaprogramowanie generacji pokojow
+## 16.12.24r. - Opracowanie algorytmow losowej generacji
 ## 23.12.24r. - Zaprogramowanie generacji pokojow
 ## 30.12.24r. - Dorzucenie animacji do modeli
 ## 06.01.25r. - Dorzucenie animacji do modeli
-## 13.01.25r. - Koniec
+## 13.01.25r. - Koniec?

@@ -27,7 +27,7 @@ public:
 			ingameObject::process(dt, shader, camera);
 
 
-			if (glm::length(*this->playerPos - this->model.translation) < 3)
+			if (glm::length(*this->playerPos - this->model.translation) < 5)
 			{
 				this->lookAtPlayer();
 				this->followPlayer();
@@ -41,6 +41,7 @@ public:
 		Vector3 vec(temp.x, 0, temp.z);
 
 		vec = vec * (glm::length(temp)) / vec.length();
+		std::cout << vec.x << " " << vec.y << " " << vec.z << std::endl;
 		body->applyLocalForceAtCenterOfMass(vec * 2);
 	}
 	void collidedWithPlayer()

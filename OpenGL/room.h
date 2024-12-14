@@ -1,6 +1,8 @@
 ﻿#ifndef ROOM_H_
 
 #define ROOM_H_
+
+#include "graph.h"
 #include "wall.h"
 #include "platform.h"
 #include"grounds.h"
@@ -18,6 +20,8 @@
 
 class Room
 {
+	int type;
+	int numOfVariants = 2;
 	std::vector <physicsObject*> objects;
 	std::vector <Wall*> walls;
 	std::vector <Platform*> platforms;
@@ -26,7 +30,7 @@ class Room
 	GLFWwindow* window;
 
 	Player* player;
-
+	GraphMap test;
 	glm::vec3 size;
 	glm::vec3 position;
 
@@ -35,6 +39,12 @@ class Room
 public:
 	Room(glm::vec3 position, glm::vec3 size, modelImporter* importer, Physics* phys, GLFWwindow* window)
 	{
+		srand(time(0));
+
+		
+
+		type = rand() % numOfVariants;
+
 		this->size = size;
 		this->position = position;
 
@@ -60,6 +70,19 @@ public:
 
 		this->createWall(glm::vec3(position.x + size.x / 2.0, position.y + size.y / 2.0, position.z), glm::vec3(0.1, size.y, size.z));
 		this->createWall(glm::vec3(position.x - size.x / 2.0, position.y + size.y / 2.0, position.z), glm::vec3(0.1, size.y, size.z));
+		//switch (this->type)
+		//{
+		//	case 0:
+		//	{
+
+		//		break;
+		//	}
+		//	case 1:
+		//	{
+
+		//	}
+		//}
+
 
 		
 	}

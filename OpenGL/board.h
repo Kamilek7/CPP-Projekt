@@ -2,8 +2,7 @@
 #define BOARD_H
 	
 #include "room.h"
-#include <cstdlib>
-#include <ctime>
+
 
 
 class GameComponents

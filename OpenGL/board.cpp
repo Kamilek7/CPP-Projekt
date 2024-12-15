@@ -19,34 +19,8 @@ GameComponents::GameComponents()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
 
-    rooms.push_back(new Room(glm::vec3(0, -0.3, 0), glm::vec3(10.0, 4.0, 10.0), &importer, &phys));
+    rooms.push_back(new Room(glm::vec3(0, -0.3, 0), glm::vec3(10.0, 4.0, 10.0), &importer, &phys, window));
 
-    // Dodawanie obiekt�w za pomoc� nowych klas
-    objects.push_back(new Aquamon(&importer, &phys));
-    objects.push_back(new Aquilamon(&importer, &phys));
-    objects.push_back(new BlackAqumon(&importer, &phys));
-    objects.push_back(new Tenemon(&importer, &phys));
-    objects.push_back(new Tsunomon(&importer, &phys));
-
-    // Dodawanie istniej�cych obiekt�w
-    objects.push_back(new Scientist(&importer, &phys));
-    objects.push_back(new Basilisk(&importer, &phys));
-    objects.push_back(new Fighter(&importer, &phys));
-
-    // Dodawanie DarkTyrannomon za pomoc� nowej klasy
-    objects.push_back(new DarkTyrannomon(&importer, &phys));
-
-    // Pozycjonowanie obiekt�w
-    for (int i = 0; i < objects.size(); i++)
-    {
-        objects[i]->translate(-0.8 + double(i * 0.6), 0.2);
-    }
-
-    // Dodawanie gracza
-    objects.push_back(new Player(&importer, &phys, window));
-    
-    listener.init(&objects);
-    this->phys.world->setEventListener(&listener);
 }
 
 void GameComponents::render()
@@ -58,18 +32,6 @@ void GameComponents::render()
     phys.process(fpsTime);
     camera.update(45.f, 0.1f, 100.0f);
 
-    for (int i = 0; i < objects.size(); i++)
-    {
-        objects[i]->process(fpsTime, shaderProgram, camera);
-        if (objects[i]->isDead())
-        {
-
-            delete objects[i];
-            objects[i] = nullptr;
-            objects.erase(objects.begin() + i);
-            i--;
-        }
-    }
     for (int i = 0; i < rooms.size(); i++)
     {
         rooms[i]->process(fpsTime, shaderProgram, camera);

@@ -10,9 +10,9 @@ class physicsObject :public ingameObject
 protected:
 	glm::vec3 size;
 	Physics* phys;
-	std::vector <physicsObject*> thisObject;
 
 public:
+	
 	RigidBody* body;
 	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(0.1,0.1,0.1), bool dynamic=true) :ingameObject(name, importer) 
 	{
@@ -21,17 +21,13 @@ public:
 		this->body = phys->linkBody(size, dynamic);
 		this->body->setAngularDamping(reactphysics3d::decimal(1));
 
-		
-		thisObject.push_back(this);
-
-		this->body->setUserData((void*)( & thisObject));
+		this->body->setUserData((void*)(this));
 
 	};
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
-
 		
 	}
 	void getInfoFromPhys()
@@ -63,5 +59,6 @@ public:
 	virtual void collidedWith(Body* bd) { }
 	virtual void collidedWithMonster() {}
 	virtual void collidedWithPlayer() {}
+	virtual void setPlayerLocation(glm::vec3* pos) {}
 };
 #endif 

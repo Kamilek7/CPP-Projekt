@@ -14,6 +14,7 @@ public:
 		playerPos = new glm::vec3(0, 0, 0);
 		dead = false;
 		this->disableRotation();
+		this->body->setLinearDamping(5);
 	}
 	bool isDead()
 	{

@@ -19,7 +19,7 @@ GameComponents::GameComponents()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     camera = Camera(WINDOW_WIDTH, WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
 
-    rooms.push_back(new Room(glm::vec3(0, -0.3, 0), glm::vec3(10.0, 4.0, 10.0), &importer, &phys, window));
+    rooms.push_back(new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.0, 4.0), &importer, &phys, window));
 
 }
 

@@ -61,26 +61,30 @@ public:
 			{
 				temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
 			}
-			temp = glm::normalize(temp);
 
-			Vector3 vec(temp.x, 0, temp.z);
-
-			glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
-			glm::vec3 test = glm::vec3(1, 0, 0);
-
-			float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
-
-			if (temp.z > 0)
+			
+			if (temp.x != 0 && temp.z != 0)
 			{
-				angle = 8 * acos(1) - angle;
+				temp = glm::normalize(temp);
+				Vector3 vec(temp.x, 0, temp.z);
+				glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
+				glm::vec3 test = glm::vec3(1, 0, 0);
+
+				float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
+
+				if (temp.z > 0)
+				{
+					angle = 8 * acos(1) - angle;
+				}
+
+				glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
+
+				this->model.rotation = rot;
+
+				vec = vec * (glm::length(temp)) / vec.length();
+				body->applyLocalForceAtCenterOfMass(vec * 10);
 			}
 
-			glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
-
-			this->model.rotation = rot;
-
-			vec = vec * (glm::length(temp)) / vec.length();
-			body->applyLocalForceAtCenterOfMass(vec * 10);
 
 
 		}

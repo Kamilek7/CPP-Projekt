@@ -48,7 +48,7 @@ public:
 		map[pair] = new NodeMap(pair);
 		
 		branchNode(map[pair], 4);
-		showGraphStructure();
+		//showGraphStructure();
 	 }
 
 	void branchNode(NodeMap* node, int numAvDirections)
@@ -60,7 +60,7 @@ public:
 		// 1 -> South
 		// 2 -> East
 		// 3 -> West
-		if (mainIters < 5)
+		if (mainIters < 7)
 		{
 			if (iters < max)
 			{
@@ -117,7 +117,7 @@ public:
 			{
 				mainIters++;
 				iters = 0;
-				max = std::rand() % 7 + 2;
+				max = std::rand() % 9 + 3;
 			}
 		}
 	}
@@ -142,7 +142,7 @@ private:
 				if (map.find(pos) != map.end())
 				{
 					if (map[pos]->whereParent == 3 || map[pos]->directions[3] != -1)
-						std::cout << "x";
+						std::cout << "-";
 					else
 						std::cout << " ";
 					std::cout << "x";
@@ -160,7 +160,7 @@ private:
 				{
 					std::cout << " ";
 					if (map[pos]->whereParent == 1 || map[pos]->directions[1] != -1)
-						std::cout << "x";
+						std::cout << "|";
 					else
 						std::cout << " ";
 					

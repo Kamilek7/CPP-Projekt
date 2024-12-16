@@ -10,11 +10,13 @@ public:
 	{
 		double scale = 0.005;
 		this->model.scale = glm::vec3(scale, scale, scale);
+
 	}
 	void collidedWith(Body* bd)
 	{
 		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
 	}
+
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		if (this->isDead())
@@ -26,8 +28,7 @@ public:
 			this->getInfoFromPhys();
 			ingameObject::process(dt, shader, camera);
 
-
-			if (glm::length(*this->playerPos - this->model.translation) < 5)
+			if (glm::length(*this->playerPos - this->model.translation) < 2)
 			{
 				this->lookAtPlayer();
 				this->followPlayer();
@@ -41,8 +42,7 @@ public:
 		Vector3 vec(temp.x, 0, temp.z);
 
 		vec = vec * (glm::length(temp)) / vec.length();
-		std::cout << vec.x << " " << vec.y << " " << vec.z << std::endl;
-		body->applyLocalForceAtCenterOfMass(vec * 2);
+		body->applyLocalForceAtCenterOfMass(vec * 8);
 	}
 	void collidedWithPlayer()
 	{

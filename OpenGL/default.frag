@@ -16,15 +16,15 @@ vec4 pointLight()
 {	
 	vec3 lightVec = lightPos - crntPos;
 	float dist = length(lightVec);
-	float a = 3.0;
+	float a = 0.5;
 	float b = 0.7;
 	float inten = 1.0f / (a * dist * dist + b * dist + 1.0f);
 
-	float ambient = 0.20f;
+	float ambient = 0.15f;
 	vec3 normal = normalize(Normal);
 	vec3 lightDirection = normalize(lightVec);
 	float diffuse = max(dot(normal, lightDirection), 0.0f);
-	float specularLight = 0.50f;
+	float specularLight = 0.40f;
 	vec3 viewDirection = normalize(camPos - crntPos);
 	vec3 reflectionDirection = reflect(-lightDirection, normal);
 	float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);

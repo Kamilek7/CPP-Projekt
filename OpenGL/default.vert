@@ -9,14 +9,16 @@ out vec3 crntPos;
 out vec3 Normal;
 out vec2 texCoord;
 
-
 uniform mat4 camMatrix;
 uniform mat4 model;
 
 void main()
 {
 	crntPos = vec3(model * vec4(aPos, 1.0f));
-	Normal = aNormal;
+	mat3 normalMatrix = mat3(model);
+	normalMatrix = inverse(normalMatrix);
+	normalMatrix = transpose(normalMatrix);
+	Normal = normalize(aNormal*normalMatrix);
 	texCoord = aTex;
 	gl_Position = camMatrix * vec4(crntPos, 1.0);
 }

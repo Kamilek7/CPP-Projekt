@@ -36,7 +36,7 @@ public:
 class GraphMap
 {
 public:
-	
+	int size = 1;
 	std::map<std::pair <int, int>, NodeMap*> map;
 	int mainIters = 0;
 	int iters = 0;
@@ -50,6 +50,11 @@ public:
 		branchNode(map[pair], 4);
 		//showGraphStructure();
 	 }
+
+	int getSize()
+	{
+		return this->size;
+	}
 
 	void branchNode(NodeMap* node, int numAvDirections)
 	{
@@ -101,6 +106,7 @@ public:
 
 						iters++;
 						branchNode(map[newPos], 3);
+						this->size++;
 
 					}
 					else

@@ -11,7 +11,23 @@ class Light
 {
 	glm::vec3 position;
 	glm::vec3 color;
-	float intensity = 1.0;
 
+	int id;
+
+	float intensity;
+	float a;
+	float b;
+	float c;
+
+	Light()
+	{
+		static int count = 0;
+		id = count;
+		count++;
+	}
+	void process(Shader& shader)
+	{
+
+	}
 };
 #endif // !LIGHT_H_

@@ -13,11 +13,8 @@ class GameComponents
 	unsigned int MAX_FPS = 120;
 	double fpsTime = 1 / double(MAX_FPS);
 	modelImporter importer;
-	Shader shaderProgram;
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 	Camera camera;
-	std::vector <Room*> rooms;
+	Room* mainLocation;
 
 	Physics phys;
 

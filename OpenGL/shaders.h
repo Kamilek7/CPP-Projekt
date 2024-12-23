@@ -15,7 +15,7 @@ class Shader
 public:
 	GLuint program;
 	Shader() {};
-	Shader(const char* vertFile, const char* fragFile);
+	Shader(const char* vertFile, const char* fragFile, int lightNum);
 
 	void on();
 	void remove();

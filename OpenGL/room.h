@@ -27,6 +27,10 @@ class Room
 	Physics* phys;
 	GLFWwindow* window;
 
+	Shader shaderProgram;
+	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
+
 	Player* player;
 	GraphMap map;
 	glm::vec3 size;
@@ -46,13 +50,27 @@ public:
 		this->phys = phys;
 		this->player = new Player(importer, phys, window);
 
+		shaderProgram = Shader("default.vert", "default.frag", 1);
+		shaderProgram.on();
+
+		glUniform4f(glGetUniformLocation(shaderProgram.program, "pointLights[0].lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
+		glUniform3f(glGetUniformLocation(shaderProgram.program, "pointLights[0].position"), lightPos.x, lightPos.y, lightPos.z);
+
+		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].a"), 0.5);
+		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].b"), 0.7);
+		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].c"), 1.0);
+
+
 		this->generateRoom();
 
 		this->populateRoom();
 
 		this->phys->world->setEventListener(&listener);
 	}
+	Room()
+	{
 
+	}
 	void generateRoom()
 	{
 
@@ -154,12 +172,12 @@ public:
 		walls[walls.size() - 1]->translate(position.x, position.y, position.z);
 	}
 
-	void process(float dt, Shader& shader, Camera& camera)
+	void process(float dt, Camera& camera)
 	{
-		player->process(dt, shader, camera);
+		player->process(dt, shaderProgram, camera);
 		for (int i = 0; i < objects.size(); i++)
 		{
-			objects[i]->process(dt, shader, camera);
+			objects[i]->process(dt, shaderProgram, camera);
 			if (objects[i]->isDead())
 			{
 
@@ -171,11 +189,11 @@ public:
 		}
 		for (int i = 0; i < walls.size(); i++)
 		{
-			walls[i]->process(dt, shader, camera);
+			walls[i]->process(dt, shaderProgram, camera);
 		}
 		for (int i = 0; i < platforms.size(); i++)
 		{
-			platforms[i]->process(dt, shader, camera);
+			platforms[i]->process(dt, shaderProgram, camera);
 		}
 	}
 };

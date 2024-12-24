@@ -39,11 +39,13 @@ public:
 	int size = 1;
 	std::map<std::pair <int, int>, NodeMap*> map;
 	int mainIters = 0;
+	int maxRooms = 35;
 	int iters = 0;
 	int max = 5;
 	int dimensions[4] = { 0,0,0,0 };
 	GraphMap()
 	{
+		std::srand(time(NULL));
 		std::pair <int, int> pair = std::make_pair(0, 0);
 		map[pair] = new NodeMap(pair);
 		
@@ -51,14 +53,9 @@ public:
 		//showGraphStructure();
 	 }
 
-	int getSize()
-	{
-		return this->size;
-	}
-
 	void branchNode(NodeMap* node, int numAvDirections)
 	{
-		std::srand(time(NULL));
+		
 		int directionNum = std::rand() % numAvDirections + 1;
 
 		// 0 -> North
@@ -105,7 +102,9 @@ public:
 						node->addChildNode(map[newPos], pick);
 
 						iters++;
-						branchNode(map[newPos], 3);
+						maxRooms--;
+						if (maxRooms>0)
+							branchNode(map[newPos], 3);
 						this->size++;
 
 					}

@@ -9,18 +9,18 @@
 
 class Light
 {
+public:
 	glm::vec3 position;
-	glm::vec3 color;
+	glm::vec4 color;
 
 	int id;
 
 	float intensity;
-	float a;
-	float b;
-	float c;
 
-	Light()
+	Light(glm::vec3 pos, glm::vec4 col)
 	{
+		this->position = pos;
+		this->color = col;
 		static int count = 0;
 		id = count;
 		count++;

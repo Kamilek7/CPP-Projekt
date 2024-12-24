@@ -17,12 +17,14 @@
 #include "Tenemon.h"
 #include "Tsunomon.h"
 #include "collisionListener.h"
-
+#include "light.h"
 class Room
 {
 	std::vector <physicsObject*> objects;
 	std::vector <Wall*> walls;
 	std::vector <Platform*> platforms;
+	std::vector <Light*> lights;
+
 	modelImporter* importer;
 	Physics* phys;
 	GLFWwindow* window;
@@ -50,20 +52,11 @@ public:
 		this->phys = phys;
 		this->player = new Player(importer, phys, window);
 
-		shaderProgram = Shader("default.vert", "default.frag", 1);
-		shaderProgram.on();
-
-		glUniform4f(glGetUniformLocation(shaderProgram.program, "pointLights[0].lightColor"), lightColor.x, lightColor.y, lightColor.z, lightColor.w);
-		glUniform3f(glGetUniformLocation(shaderProgram.program, "pointLights[0].position"), lightPos.x, lightPos.y, lightPos.z);
-
-		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].a"), 0.5);
-		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].b"), 0.7);
-		//glUniform1f(glGetUniformLocation(shaderProgram.program, "pointLights[0].c"), 1.0);
-
-
 		this->generateRoom();
 
 		this->populateRoom();
+
+		this->setLights();
 
 		this->phys->world->setEventListener(&listener);
 	}
@@ -133,31 +126,46 @@ public:
 		
 	}
 
+	void setLights()
+	{
+		shaderProgram = Shader("default.vert", "default.frag", map.size);
+		shaderProgram.on();
+
+		for (int i = 0; i < map.size; i++)
+		{
+			glUniform4f(glGetUniformLocation(shaderProgram.program, ( std::string("pointLights[") + std::to_string(i) + std::string( "].lightColor")).c_str()), lights[i]->color.x, lights[i]->color.y, lights[i]->color.z, lights[i]->color.w);
+			glUniform3f(glGetUniformLocation(shaderProgram.program, (std::string("pointLights[") + std::to_string(i) + std::string("].position")).c_str()), lights[i]->position.x, lights[i]->position.y, lights[i]->position.z);
+		}
+
+
+	}
+
 	void populateRoom()
 	{
 
-		objects.push_back(new Aquamon(importer, phys));
-		objects[0]->translate(-1.5, 1.0, -1.5);
-		objects[0]->setPlayerLocation(&this->player->location);
+		std::cout << map.size;
+		for (int y = map.dimensions[3]; y >= map.dimensions[2]; y--)
+		{
+			for (int x = map.dimensions[0]; x <= map.dimensions[1]; x++)
+			{
+
+				std::pair <int, int> pos = std::make_pair(x, y);
+				if (map.map.find(pos) != map.map.end())
+				{
 
 
-		//objects.push_back(new Aquilamon(importer, phys));
-		//objects.push_back(new BlackAqumon(importer, phys));
-		//objects.push_back(new Tenemon(importer, phys));
-		//objects.push_back(new Tsunomon(importer, phys));
+					lights.push_back(new Light(glm::vec3(2 * size.x * x, 1.5, 2 * size.z * y), lightColor));
 
-		//objects.push_back(new Scientist(importer, phys));
-		//objects.push_back(new Basilisk(importer, phys));
-		//objects.push_back(new Fighter(importer, phys));
+					//if (!(std::rand() % 3))
+					//{
+						//objects.push_back(new Aquamon(importer, phys));
+						//objects[objects.size()-1]->translate(0, 1.0, 0);
+						//objects[objects.size() - 1]->setPlayerLocation(&this->player->location);
+					//}
 
-		//objects.push_back(new DarkTyrannomon(importer, phys));
-
-		//// Pozycjonowanie obiektow
-		//for (int i = 0; i < objects.size(); i++)
-		//{
-		//	objects[i]->translate(-0.8 + double(i * 0.6), 0.2);
-		//	objects[i]->setPlayerLocation(&this->player->location);
-		//}
+				}
+			}
+		}
 
 	}
 

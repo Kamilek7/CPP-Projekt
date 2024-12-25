@@ -28,7 +28,7 @@ public:
 	};
 	RigidBody* linkBody(glm::vec3 size, bool dynamic)
 	{
-		Vector3 position(0, 0, 0);
+		Vector3 position(0.0, 0.0, 0.0);
 		Quaternion orientation = Quaternion::identity();
 		Transform transform(position, orientation);
 		const Vector3 halfExtents(size.x, size.y, size.z);

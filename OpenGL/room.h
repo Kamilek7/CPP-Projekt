@@ -5,7 +5,6 @@
 #include "graph.h"
 #include "wall.h"
 #include "platform.h"
-#include"grounds.h"
 #include "scientist.h"
 #include "basilisk.h"
 #include "fighter.h"
@@ -52,9 +51,11 @@ public:
 		this->phys = phys;
 		this->player = new Player(importer, phys, window);
 
-		this->generateRoom();
+		shaderProgram = Shader("default.vert", "default.frag", map.size);
+		shaderProgram.on();
 
-		this->populateRoom();
+
+		this->generateRoom();
 
 		this->setLights();
 
@@ -67,7 +68,6 @@ public:
 	void generateRoom()
 	{
 
-
 		for (int y = map.dimensions[3]; y >= map.dimensions[2]; y--)
 		{
 			for (int x = map.dimensions[0]; x <= map.dimensions[1]; x++)
@@ -76,47 +76,20 @@ public:
 				std::pair <int, int> pos = std::make_pair(x, y);
 				if (map.map.find(pos) != map.map.end())
 				{
-					this->createFloor(glm::vec3(2*size.x*double(x), position.y, 2*size.z*double(y)), glm::vec3(size.x, 0.05, size.z));
-					this->createFloor(glm::vec3(2*size.x*double(x), position.y + 2*size.y, 2*size.z*double(y)), glm::vec3(size.x, 0.05, size.z));
-					if (map.map[pos]->whereParent == 0 || map.map[pos]->directions[0] != -1)
+					lights.push_back(new Light(glm::vec3(2 * size.x * x, 1.5, 2 * size.z * y), lightColor));
+					int rand = std::rand() % 3;
+
+					if (!rand && y!=0 && x!=0)
 					{
-						this->createWall(glm::vec3(2*size.x * double(x) + 5*size.x/8, position.y + size.y, 2*size.z * double(y) + size.z), glm::vec3(size.x*3/8, size.y, 0.1));
-						this->createWall(glm::vec3(2 * size.x * double(x) - 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) + size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
-					}
-					else
-					{
-						this->createWall(glm::vec3(2*size.x * double(x), position.y + size.y, 2*size.z * double(y) + size.z), glm::vec3(size.x, size.y, 0.1));
+						objects.push_back(new Aquamon(importer, phys));
+						objects[objects.size() - 1]->translate(2 * x * size.x + (std::rand() % 3)-1, 0.5, 2 * y * size.z + (std::rand() % 3) - 1);
+						objects[objects.size() - 1]->setPlayerLocation(&this->player->location);
 					}
 
-					if (map.map[pos]->whereParent == 1 || map.map[pos]->directions[1] != -1)
-					{
-						this->createWall(glm::vec3(2 * size.x * double(x) + 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) - size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
-						this->createWall(glm::vec3(2 * size.x * double(x) - 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) - size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
-					}
-					else
-					{
-						this->createWall(glm::vec3(2*size.x * double(x), position.y + size.y, 2*size.z * double(y) - size.z), glm::vec3(size.x, size.y, 0.1));
-					}
+					this->createRoom(pos, x, y);
 
-					if (map.map[pos]->whereParent == 2 || map.map[pos]->directions[2] != -1)
-					{
-						this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y) + 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
-						this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y) - 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
-					}
-					else
-					{
-						this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y)), glm::vec3(0.1, size.y, size.z));
-					}
 
-					if (map.map[pos]->whereParent == 3 || map.map[pos]->directions[3] != -1)
-					{
-						this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y) + 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
-						this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y) - 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
-					}
-					else
-					{
-						this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y)), glm::vec3(0.1, size.y, size.z));
-					}
+
 				}
 			}
 		}
@@ -126,10 +99,54 @@ public:
 		
 	}
 
+	void createRoom(std::pair <int,int> pos, int x, int y)
+	{
+		this->createFloor(glm::vec3(2 * size.x * double(x), position.y, 2 * size.z * double(y)), glm::vec3(size.x, 0.05, size.z));
+		this->createFloor(glm::vec3(2 * size.x * double(x), position.y + 2 * size.y, 2 * size.z * double(y)), glm::vec3(size.x, 0.05, size.z));
+		if (map.map[pos]->whereParent == 0 || map.map[pos]->directions[0] != -1)
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) + 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) + size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
+			this->createWall(glm::vec3(2 * size.x * double(x) - 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) + size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
+		}
+		else
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x), position.y + size.y, 2 * size.z * double(y) + size.z), glm::vec3(size.x, size.y, 0.1));
+		}
+
+		if (map.map[pos]->whereParent == 1 || map.map[pos]->directions[1] != -1)
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) + 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) - size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
+			this->createWall(glm::vec3(2 * size.x * double(x) - 5 * size.x / 8, position.y + size.y, 2 * size.z * double(y) - size.z), glm::vec3(size.x * 3 / 8, size.y, 0.1));
+		}
+		else
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x), position.y + size.y, 2 * size.z * double(y) - size.z), glm::vec3(size.x, size.y, 0.1));
+		}
+
+		if (map.map[pos]->whereParent == 2 || map.map[pos]->directions[2] != -1)
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y) + 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
+			this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y) - 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
+		}
+		else
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) + size.x, position.y + size.y, 2 * size.z * double(y)), glm::vec3(0.1, size.y, size.z));
+		}
+
+		if (map.map[pos]->whereParent == 3 || map.map[pos]->directions[3] != -1)
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y) + 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
+			this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y) - 5 * size.z / 8), glm::vec3(0.1, size.y, size.z * 3 / 8));
+		}
+		else
+		{
+			this->createWall(glm::vec3(2 * size.x * double(x) - size.x, position.y + size.y, 2 * size.z * double(y)), glm::vec3(0.1, size.y, size.z));
+		}
+	}
+
 	void setLights()
 	{
-		shaderProgram = Shader("default.vert", "default.frag", map.size);
-		shaderProgram.on();
+
 
 		for (int i = 0; i < map.size; i++)
 		{
@@ -140,34 +157,6 @@ public:
 
 	}
 
-	void populateRoom()
-	{
-
-		std::cout << map.size;
-		for (int y = map.dimensions[3]; y >= map.dimensions[2]; y--)
-		{
-			for (int x = map.dimensions[0]; x <= map.dimensions[1]; x++)
-			{
-
-				std::pair <int, int> pos = std::make_pair(x, y);
-				if (map.map.find(pos) != map.map.end())
-				{
-
-
-					lights.push_back(new Light(glm::vec3(2 * size.x * x, 1.5, 2 * size.z * y), lightColor));
-
-					//if (!(std::rand() % 3))
-					//{
-						//objects.push_back(new Aquamon(importer, phys));
-						//objects[objects.size()-1]->translate(0, 1.0, 0);
-						//objects[objects.size() - 1]->setPlayerLocation(&this->player->location);
-					//}
-
-				}
-			}
-		}
-
-	}
 
 	void createFloor(glm::vec3 position, glm::vec3 size)
 	{

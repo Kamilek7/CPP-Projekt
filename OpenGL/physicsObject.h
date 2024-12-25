@@ -14,7 +14,7 @@ protected:
 public:
 	
 	RigidBody* body;
-	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(0.1,0.1,0.1), bool dynamic=true) :ingameObject(name, importer) 
+	physicsObject(const char* name, modelImporter* importer, Physics* _phys, glm::vec3 size = glm::vec3(0.1,0.1,0.1), bool dynamic = true) :ingameObject(name, importer)
 	{
 		this->size = size;
 		this->phys = _phys;

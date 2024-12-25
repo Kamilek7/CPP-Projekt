@@ -101,11 +101,16 @@ public:
 						map[newPos]->addParentNode(node, parentPos);
 						node->addChildNode(map[newPos], pick);
 
+						
 						iters++;
-						maxRooms--;
-						if (maxRooms>0)
+						if (maxRooms > 0)
+						{
+							maxRooms--;
+							this->size++;
 							branchNode(map[newPos], 3);
-						this->size++;
+						}
+							
+						
 
 					}
 					else

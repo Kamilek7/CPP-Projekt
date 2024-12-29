@@ -14,10 +14,22 @@ flat out ivec4 IDsPass;
 
 uniform mat4 camMatrix;
 uniform mat4 model;
+uniform mat4 bones[50];
 
 void main()
 {
-	crntPos = vec3(model * vec4(aPos, 1.0f));
+	if (true)
+	{
+		mat4 bone = bones[IDs[0]]*weights[0];
+		bone += bones[IDs[1]]*weights[1];
+		bone += bones[IDs[2]]*weights[2];
+		bone += bones[IDs[3]]*weights[3];
+		crntPos = vec3(model * (bone*vec4(aPos, 1.0f)));
+	}
+	else
+	{
+		crntPos = vec3(model * vec4(aPos, 1.0f));
+	}
 	mat3 normalMatrix = mat3(model);
 	normalMatrix = inverse(normalMatrix);
 	normalMatrix = transpose(normalMatrix);

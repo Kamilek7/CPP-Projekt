@@ -19,8 +19,8 @@ public:
 	{
 		this->window = _window;
 		this->disableRotation();
-		this->model.linOffset.y -= 0.0;
-		this->model.scale = glm::vec3(0.5, 0.5, 0.5);
+		this->model.linOffset.y += 0.3;
+		this->model.scale = glm::vec3(0.05, 0.05, 0.05);
 		this->body->setLinearDamping(5);
 
 	}

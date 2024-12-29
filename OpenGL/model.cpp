@@ -4,6 +4,7 @@ glModel::glModel(const char* filer, modelImporter* importer)
 {
 	importer->loadModel(filer);
 	meshes = importer->getMeshes();
+	boneTransformations = importer->getBoneTransforms();
 	importer->clear();
 	translation = glm::vec3(0.0f, 0.0f, 0.0f);
 	rotation = glm::quat(1.0f, 0.0f, 0.0f, 0.0f);
@@ -17,7 +18,7 @@ void glModel::draw(Shader& shader, Camera& camera)
 	glm::mat4 modelMatrix = getMatrix();
 	for (unsigned int i = 0; i < meshes.size(); i++)
 	{
-		meshes[i].Mesh::Draw(shader, camera, modelMatrix);
+		meshes[i].Mesh::Draw(shader, camera, modelMatrix, boneTransformations);
 	}
 }
 

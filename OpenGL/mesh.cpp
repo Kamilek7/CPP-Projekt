@@ -1,6 +1,12 @@
 #include "mesh.h"
 
-
+void showMatrixA(glm::mat4 mat)
+{
+	std::cout << mat[0][0] << " " << mat[1][0] << " " << mat[2][0] << " " << mat[3][0] << std::endl;
+	std::cout << mat[0][1] << " " << mat[1][1] << " " << mat[2][1] << " " << mat[3][1] << std::endl;
+	std::cout << mat[0][2] << " " << mat[1][2] << " " << mat[2][2] << " " << mat[3][2] << std::endl;
+	std::cout << mat[0][3] << " " << mat[1][3] << " " << mat[2][3] << " " << mat[3][3] << std::endl << std::endl;
+}
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures)
 {
 	Mesh::vertices = vertices;
@@ -42,7 +48,7 @@ void Mesh::unwrapTexCoords(glm::vec2 scale)
 	EBO.unbind();
 }
 
-void Mesh::Draw(Shader& shader, Camera& camera, glm::mat4 matrix)
+void Mesh::Draw(Shader& shader, Camera& camera, glm::mat4 matrix, std::vector <glm::mat4> bones)
 {
 	shader.on();
 	vao.bind();
@@ -67,6 +73,16 @@ void Mesh::Draw(Shader& shader, Camera& camera, glm::mat4 matrix)
 	camera.matrix(shader, "camMatrix");
 
 	glUniformMatrix4fv(glGetUniformLocation(shader.program, "model"), 1, GL_FALSE, glm::value_ptr(matrix));
+	int max = bones.size();
+	if (max > 50)
+		max = 50;
+	for (int i = 0; i <max; i++)
+	{
+		
+		std::string name = "bones[" + std::to_string(i) + "]";
+		glUniformMatrix4fv(glGetUniformLocation(shader.program, name.c_str()), 1, GL_FALSE, glm::value_ptr(bones[i]));
+	}
+	
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }

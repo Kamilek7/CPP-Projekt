@@ -2,17 +2,50 @@
 
 #include <iostream>
 
+glm::mat4 aiMatToGLM(aiMatrix4x4& convert)
+{
+    glm::mat4 temp;
+
+    temp[0][0] = convert.a1;
+    temp[1][0] = convert.a2;
+    temp[2][0] = convert.a3;
+    temp[3][0] = convert.a4;
+
+    temp[0][1] = convert.b1;
+    temp[1][1] = convert.b2;
+    temp[2][1] = convert.b3;
+    temp[3][1] = convert.b4;
+
+    temp[0][2] = convert.c1;
+    temp[1][2] = convert.c2;
+    temp[2][2] = convert.c3;
+    temp[3][2] = convert.c4;
+
+    temp[0][3] = convert.d1;
+    temp[1][3] = convert.d2;
+    temp[2][3] = convert.d3;
+    temp[3][3] = convert.d4;
+
+    return temp;
+}
+
+
+
 void modelImporter::loadModel(const char* file)
 {
 	scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 	fileStr = std::string(file);
 	dir = fileStr.substr(0, fileStr.find_last_of('/'));
+    glm::mat4 temp(1.0f);
+    crawlNodes(scene->mRootNode, temp);
 
-    crawlNodes(scene->mRootNode);
-
+    for (int i = 0; i < boneInfo.size(); i++)
+    {
+        boneTransforms.push_back(boneInfo[i].transform);
+    }
 }
 
-void modelImporter::crawlNodes(aiNode* node)
+void modelImporter::crawlNodes(aiNode* node, glm::mat4 &transform)
 {
     
     
@@ -24,9 +57,20 @@ void modelImporter::crawlNodes(aiNode* node)
 
         meshes.push_back(fillMesh(mesh));
     }
+    
+    glm::mat4 nodeTransformation = aiMatToGLM(node->mTransformation);
+    glm::mat4 transformation = transform * nodeTransformation;
+    
+    if (boneNameIndex.find(node->mName.data) != boneNameIndex.end())
+    {
+        
+        boneInfo[boneNameIndex[node->mName.data]].transform = transformation * boneInfo[boneNameIndex[node->mName.data]].offset;
+    }
+
     for (unsigned int i = 0; i < node->mNumChildren; i++)
     {
-        crawlNodes(node->mChildren[i]);
+        
+        crawlNodes(node->mChildren[i], transformation);
     }
 
 }
@@ -36,6 +80,7 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
     std::vector<Texture> textures;
+    glm::mat4 boneTransforms;
 
     vertToBones.resize(mesh->mNumVertices);
 
@@ -53,6 +98,13 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
             else
             {
                 boneID = boneNameIndex[name];
+            }
+
+            if (boneID == boneInfo.size())
+            {
+                glm::mat4 offsetTemp = aiMatToGLM(mesh->mBones[i]->mOffsetMatrix);
+                BoneInfo temp(offsetTemp);
+                boneInfo.push_back(temp);
             }
 
             for (int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
@@ -118,12 +170,6 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
         std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, "specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
-
-    //if ( fileStr == "resources/bartek/bartek.gltf")
-    //{
-    //    for (int i = 0; i < vertices.size(); i++)
-    //        std::cout << vertices[i].IDs.x << " " << vertices[i].IDs.y << " " << vertices[i].IDs.z << " " << vertices[i].IDs.w << " " << vertices[i].weights.x << " " << vertices[i].weights.y << " " << vertices[i].weights.z << " " << vertices[i].weights.w << std::endl;
-    //}
 
 
     return Mesh(vertices, indices, textures);

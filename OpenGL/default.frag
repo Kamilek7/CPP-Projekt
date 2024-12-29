@@ -57,35 +57,35 @@ void main()
 
 	// Testing for bones
 
-	//for (int i=0;i<4;i++)
-	//{
-	//		if (weightsPass[i] >= 0.7)
-	//		{
-	//			result = vec4(1.0,0.0,0.0,1.0);
-	//		}
-	//		else if (weightsPass[i] >=0.5)
-	//		{
-	//			result = vec4(1.0,1.0,0.0,1.0);
-	//		}
-	//		else if (weightsPass[i] >=0.3)
-	//		{
-	//			result = vec4(0.0,1.0,0.0,1.0);
-	//		}
-	//		else if (weightsPass[i] >=0.1)
-	//		{
-	//			result = vec4(0.0,0.0,1.0,1.0);
-	//		}
-	//		else if (weightsPass[i]>0)
-	//		{
-	//			result = vec4(0.0,0.0,0.0,1.0);
-	//		}
-	//		else
-	//		{
-	//			break;
-	//		}
-	//		found = true;
-	//		break;
-	//}
+	for (int i=0;i<4;i++)
+	{
+			if (weightsPass[i] >= 0.7)
+			{
+				result = vec4(1.0,0.0,0.0,1.0);
+			}
+			else if (weightsPass[i] >=0.5)
+			{
+				result = vec4(1.0,1.0,0.0,1.0);
+			}
+			else if (weightsPass[i] >=0.3)
+			{
+				result = vec4(0.0,1.0,0.0,1.0);
+			}
+			else if (weightsPass[i] >=0.1)
+			{
+				result = vec4(0.0,0.0,1.0,1.0);
+			}
+			else if (weightsPass[i]>0)
+			{
+				result = vec4(0.0,0.0,0.0,1.0);
+			}
+			else
+			{
+				break;
+			}
+			found = true;
+			break;
+	}
 
 	if (!found)
 	{

@@ -13,6 +13,8 @@ public:
 	glm::mat4 getMatrix();
 
 	std::vector<Mesh> meshes;
+	std::vector<glm::mat4> boneTransformations;
+
 	glm::vec3 translation;
 	glm::quat rotation;
 	glm::vec3 scale;

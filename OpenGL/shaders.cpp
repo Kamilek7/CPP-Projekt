@@ -32,15 +32,21 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 	glShaderSource(vertexShader, 1, &vertSource, NULL);
 	glCompileShader(vertexShader);
 
+
 	// Tworzymy i kompilujemy fragment shader ktory odpowiada za kolorki
 	GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
 	glShaderSource(fragmentShader, 1, &fragSource, NULL);
 	glCompileShader(fragmentShader);
 
-	//int bufflen;
-	//glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
-	//GLchar* log_string = new char[bufflen + 1];
-	//glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
+	int bufflen;
+	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
+	GLchar* log_string = new char[bufflen + 1];
+	glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
+	std::cout << log_string << std::endl << std::endl;
+
+	//glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
+	//log_string = new char[bufflen + 1];
+	//glGetShaderInfoLog(vertexShader, bufflen, 0, log_string);
 	//std::cout << log_string;
 
 	// Ze skompilowanych shaderow tworzyny program ktory nam wszystko ladnie obsluzy - linkujemy wszystko razem

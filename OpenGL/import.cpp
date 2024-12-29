@@ -7,7 +7,7 @@ void modelImporter::loadModel(const char* file)
 	scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
 	fileStr = std::string(file);
 	dir = fileStr.substr(0, fileStr.find_last_of('/'));
-	
+
     crawlNodes(scene->mRootNode);
 
 }
@@ -15,9 +15,13 @@ void modelImporter::loadModel(const char* file)
 void modelImporter::crawlNodes(aiNode* node)
 {
     
+    
     for (unsigned int i = 0; i < node->mNumMeshes; i++)
     {
+
+
         aiMesh* mesh = scene->mMeshes[node->mMeshes[i]];
+
         meshes.push_back(fillMesh(mesh));
     }
     for (unsigned int i = 0; i < node->mNumChildren; i++)
@@ -32,6 +36,35 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
     std::vector<Vertex> vertices;
     std::vector<GLuint> indices;
     std::vector<Texture> textures;
+
+    vertToBones.resize(mesh->mNumVertices);
+
+    if (mesh->HasBones())
+    {
+        for (unsigned int i = 0; i < mesh->mNumBones; i++)
+        {
+            int boneID = 0;
+            std::string name = mesh->mBones[i]->mName.C_Str();
+            if (boneNameIndex.find(name) == boneNameIndex.end())
+            {
+                boneID = boneNameIndex.size();
+                boneNameIndex[name] = boneID;
+            }
+            else
+            {
+                boneID = boneNameIndex[name];
+            }
+
+            for (int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
+            {
+
+                vertToBones[mesh->mBones[i]->mWeights[j].mVertexId].addBoneData(boneID, mesh->mBones[i]->mWeights[j].mWeight);
+
+            }
+
+        }
+
+    }
 
     for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
@@ -58,6 +91,16 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
         else
             vertex.texUV = glm::vec2(0.0f, 0.0f);
 
+        vertex.IDs.x = vertToBones[i].boneIDs[0];
+        vertex.IDs.y = vertToBones[i].boneIDs[1];
+        vertex.IDs.z = vertToBones[i].boneIDs[2];
+        vertex.IDs.w = vertToBones[i].boneIDs[3];
+
+        vertex.weights.x = vertToBones[i].boneWeights[0];
+        vertex.weights.y = vertToBones[i].boneWeights[1];
+        vertex.weights.z = vertToBones[i].boneWeights[2];
+        vertex.weights.w = vertToBones[i].boneWeights[3];
+
         vertices.push_back(vertex);
     }
     for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -75,6 +118,13 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
         std::vector<Texture> specularMaps = loadTextures(material, aiTextureType_SPECULAR, "specular");
         textures.insert(textures.end(), specularMaps.begin(), specularMaps.end());
     }
+
+    //if ( fileStr == "resources/bartek/bartek.gltf")
+    //{
+    //    for (int i = 0; i < vertices.size(); i++)
+    //        std::cout << vertices[i].IDs.x << " " << vertices[i].IDs.y << " " << vertices[i].IDs.z << " " << vertices[i].IDs.w << " " << vertices[i].weights.x << " " << vertices[i].weights.y << " " << vertices[i].weights.z << " " << vertices[i].weights.w << std::endl;
+    //}
+
 
     return Mesh(vertices, indices, textures);
 }

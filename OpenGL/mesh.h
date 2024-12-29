@@ -1,7 +1,10 @@
 #ifndef MESH_H
 #define MESH_H
 
+
+
 #include<string>
+
 #include "vao.h"
 #include "ebo.h"
 #include "camera.h"
@@ -14,6 +17,7 @@ public:
 	std::vector <Vertex> vertices;
 	std::vector <GLuint> indices;
 	std::vector <Texture> textures;
+	std::vector <VertexBoneData> bones;
 
 	VAO vao;
 	Mesh(std::vector <Vertex>& vertices, std::vector <GLuint>& indices, std::vector <Texture>& textures);

@@ -15,11 +15,11 @@ class Player :public physicsObject
 public:
 	glm::vec3 location;
 	int lives = 3;
-	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
+	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/bartek.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		this->window = _window;
 		this->disableRotation();
-		this->model.linOffset.y += 0.25;
+		this->model.linOffset.y -= 0.0;
 		this->model.scale = glm::vec3(0.5, 0.5, 0.5);
 		this->body->setLinearDamping(5);
 

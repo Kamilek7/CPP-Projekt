@@ -36,7 +36,7 @@ public:
 class GraphMap
 {
 public:
-	int size = 1;
+	int size = 0;
 	std::map<std::pair <int, int>, NodeMap*> map;
 	int mainIters = 0;
 	int maxRooms = 35;
@@ -103,10 +103,10 @@ public:
 
 						
 						iters++;
+						maxRooms--;
+						this->size++;
 						if (maxRooms > 0)
 						{
-							maxRooms--;
-							this->size++;
 							branchNode(map[newPos], 3);
 						}
 							

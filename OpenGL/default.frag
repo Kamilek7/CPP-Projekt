@@ -5,10 +5,8 @@ out vec4 FragColor;
 in vec3 crntPos;
 in vec3 Normal;
 in vec2 texCoord;
-
-flat in ivec4 IDsPass;
 in vec4 weightsPass;
-
+flat in ivec4 IDsPass;
 
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;
@@ -53,46 +51,11 @@ vec4 calcPointLight(PointLight light)
 void main()
 {
 	vec4 result;
-	bool found = false;
 
-	// Testing for bones
-
-	for (int i=0;i<4;i++)
-	{
-			if (weightsPass[i] >= 0.7)
-			{
-				result = vec4(1.0,0.0,0.0,1.0);
-			}
-			else if (weightsPass[i] >=0.5)
-			{
-				result = vec4(1.0,1.0,0.0,1.0);
-			}
-			else if (weightsPass[i] >=0.3)
-			{
-				result = vec4(0.0,1.0,0.0,1.0);
-			}
-			else if (weightsPass[i] >=0.1)
-			{
-				result = vec4(0.0,0.0,1.0,1.0);
-			}
-			else if (weightsPass[i]>0)
-			{
-				result = vec4(0.0,0.0,0.0,1.0);
-			}
-			else
-			{
-				break;
-			}
-			found = true;
-			break;
-	}
-
-	if (!found)
-	{
-	    for(int i = 0; i < NR_LIGHTS; i++)
+	for(int i = 0; i < NR_LIGHTS; i++)
         result += calcPointLight(pointLights[i]);
 	result += texture(diffuse0, texCoord)*0.1f;
-	}
+
 
 	FragColor = result;
 

@@ -6,7 +6,6 @@
 #include <ctime>
 #include <vector>
 #include <map>
-#include <iostream>
 
 // To nie jest graf, ale na poczatku to mial byc graf wiec nazwy zostaly
 
@@ -140,51 +139,51 @@ private:
 	{
 		return std::make_pair(parentPos.first + ((int(direction / 2)) * (5 - 2 * direction)), parentPos.second +((int(abs(direction - 3) / 2)) * (1 - 2 * direction)));
 	}
-	void showGraphStructure()
-	{
-		std::cout << "Graph Dimensions: " << dimensions[1] - dimensions[0] << " by " << dimensions[3] - dimensions[2] << ". (width, height)" << std::endl<<std::endl;
-		for (int y = dimensions[3]; y >= dimensions[2]; y--)
-		{
-			for (int x = dimensions[0]; x <= dimensions[1]; x++)
-			{
-				
-				std::pair <int, int> pos = std::make_pair(x, y);
-				if (map.find(pos) != map.end())
-				{
-					if (map[pos]->whereParent == 3 || map[pos]->directions[3] != -1)
-						std::cout << "-";
-					else
-						std::cout << " ";
-					std::cout << "x";
-				}
-				else
-				{
-					std::cout << "  ";
-				}
-			}
-			std::cout << std::endl;
-			for (int x = dimensions[0]; x <= dimensions[1]; x++)
-			{
-				std::pair <int, int> pos = std::make_pair(x, y);
-				if (map.find(pos) != map.end())
-				{
-					std::cout << " ";
-					if (map[pos]->whereParent == 1 || map[pos]->directions[1] != -1)
-						std::cout << "|";
-					else
-						std::cout << " ";
-					
-				}
-				else
-				{
-					std::cout << "  ";
-				}
-			}
-			std::cout << std::endl;
-		}
-		std::cout << std::endl << std::endl;
+	//void showGraphStructure()
+	//{
+	//	std::cout << "Graph Dimensions: " << dimensions[1] - dimensions[0] << " by " << dimensions[3] - dimensions[2] << ". (width, height)" << std::endl<<std::endl;
+	//	for (int y = dimensions[3]; y >= dimensions[2]; y--)
+	//	{
+	//		for (int x = dimensions[0]; x <= dimensions[1]; x++)
+	//		{
+	//			
+	//			std::pair <int, int> pos = std::make_pair(x, y);
+	//			if (map.find(pos) != map.end())
+	//			{
+	//				if (map[pos]->whereParent == 3 || map[pos]->directions[3] != -1)
+	//					std::cout << "-";
+	//				else
+	//					std::cout << " ";
+	//				std::cout << "x";
+	//			}
+	//			else
+	//			{
+	//				std::cout << "  ";
+	//			}
+	//		}
+	//		std::cout << std::endl;
+	//		for (int x = dimensions[0]; x <= dimensions[1]; x++)
+	//		{
+	//			std::pair <int, int> pos = std::make_pair(x, y);
+	//			if (map.find(pos) != map.end())
+	//			{
+	//				std::cout << " ";
+	//				if (map[pos]->whereParent == 1 || map[pos]->directions[1] != -1)
+	//					std::cout << "|";
+	//				else
+	//					std::cout << " ";
+	//				
+	//			}
+	//			else
+	//			{
+	//				std::cout << "  ";
+	//			}
+	//		}
+	//		std::cout << std::endl;
+	//	}
+	//	std::cout << std::endl << std::endl;
 
-	}
+	//}
 };
 
 

@@ -131,3 +131,5 @@
 /OpenGL/x64/Release/CodeAnalysisResultManifest.txt
 /OpenGL/resources/colliderCube/flop.bin
 /.vs/Cpp projekt/v17/workspaceFileList.bin
+/OpenGL/OpenGL.vcxproj.user
+/OpenGL/x64/Release/animation.obj

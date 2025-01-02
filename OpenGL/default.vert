@@ -18,7 +18,7 @@ uniform mat4 bones[50];
 
 void main()
 {
-	if (true)
+	if (IDs[0]!=-2)
 	{
 		mat4 bone = bones[IDs[0]]*weights[0];
 		bone += bones[IDs[1]]*weights[1];

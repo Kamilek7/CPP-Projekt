@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-glm::mat4 aiMatToGLM(aiMatrix4x4& convert)
+glm::mat4 aiMat4ToGLM(aiMatrix4x4& convert)
 {
     glm::mat4 temp;
 
@@ -29,7 +29,101 @@ glm::mat4 aiMatToGLM(aiMatrix4x4& convert)
     return temp;
 }
 
+glm::vec3 aiVec3ToGLM(aiVector3D& vec)
+{
+    return glm::vec3(vec.x, vec.y, vec.z);
+}
 
+glm::quat aiQuatToGLM(aiQuaternion& quat)
+{
+    return glm::quat(quat.w, quat.x, quat.y, quat.z);
+}
+
+
+glm::mat3 aiMat3ToGLM(aiMatrix3x3& convert)
+{
+    glm::mat4 temp;
+
+    temp[0][0] = convert.a1;
+    temp[1][0] = convert.a2;
+    temp[2][0] = convert.a3;
+
+    temp[0][1] = convert.b1;
+    temp[1][1] = convert.b2;
+    temp[2][1] = convert.b3;
+
+    temp[0][2] = convert.c1;
+    temp[1][2] = convert.c2;
+    temp[2][2] = convert.c3;
+
+    return temp;
+}
+
+std::vector <Scales> modelImporter::getAnimationScales(const aiNodeAnim* animation)
+{
+    std::vector <Scales> scales;
+    for (int i = 0; i < animation->mNumScalingKeys; i++) {
+
+        Scales temp;
+        temp.scale = aiVec3ToGLM(animation->mScalingKeys[i].mValue);
+
+        temp.t = animation->mScalingKeys[i].mTime;
+        scales.push_back(temp);
+    }
+    return scales;
+}
+
+std::vector <Rotations> modelImporter::getAnimationRotations(const aiNodeAnim* animation)
+{
+    std::vector <Rotations> scales;
+    for (int i = 0; i < animation->mNumRotationKeys; i++) {
+
+        Rotations temp;
+        temp.t = animation->mRotationKeys[i].mTime;
+        temp.rotation = animation->mRotationKeys[i].mValue;
+        scales.push_back(temp);
+    }
+    return scales;
+}
+
+std::vector <Translations> modelImporter::getAnimationTranslations(const aiNodeAnim* animation)
+{
+    std::vector <Translations> scales;
+    for (int i = 0; i < animation->mNumPositionKeys; i++) {
+
+        Translations temp;
+        temp.translation = aiVec3ToGLM(animation->mPositionKeys[i].mValue);
+        temp.t = animation->mPositionKeys[i].mTime;
+        scales.push_back(temp);
+    }
+    return scales;
+}
+
+void modelImporter::processAnimations(int id)
+{
+    Animation temp;
+    scene->mAnimations[id];
+    std::string name = scene->mAnimations[id]->mName.data;
+    
+    float TicksPerSecond = (float)(scene->mAnimations[id]->mTicksPerSecond != 0 ? scene->mAnimations[id]->mTicksPerSecond : 25.0f);;
+    std::map <int, AnimationPacket> packetMap;
+    for (int i = 0; i < (scene->mAnimations[id])->mNumChannels; i++) {
+
+        AnimationPacket packet;
+
+        aiNodeAnim* animation = (scene->mAnimations[id])->mChannels[i];
+        int r = boneNameIndex[(scene->mAnimations[id])->mChannels[i]->mNodeName.data];
+        
+        packet.s = this->getAnimationScales(animation);
+        packet.r = this->getAnimationRotations(animation);
+        packet.t = this->getAnimationTranslations(animation);
+        
+        packetMap[r] = packet;
+    }
+
+    temp.passAnimationInfo(TicksPerSecond, packetMap, scene->mAnimations[id]->mDuration);
+    animations[name] = temp;
+}
 
 void modelImporter::loadModel(const char* file)
 {
@@ -37,12 +131,28 @@ void modelImporter::loadModel(const char* file)
 	fileStr = std::string(file);
 	dir = fileStr.substr(0, fileStr.find_last_of('/'));
     glm::mat4 temp(1.0f);
+
     crawlNodes(scene->mRootNode, temp);
 
+    if (this->scene->mNumAnimations > 0)
+    {
+        
+        for (int i = 0; i < scene->mNumAnimations; i++)
+        {
+
+            this->processAnimations(i);
+
+        }
+    }
     for (int i = 0; i < boneInfo.size(); i++)
     {
         boneTransforms.push_back(boneInfo[i].transform);
     }
+  
+ 
+    
+
+
 }
 
 void modelImporter::crawlNodes(aiNode* node, glm::mat4 &transform)
@@ -57,8 +167,7 @@ void modelImporter::crawlNodes(aiNode* node, glm::mat4 &transform)
 
         meshes.push_back(fillMesh(mesh));
     }
-    
-    glm::mat4 nodeTransformation = aiMatToGLM(node->mTransformation);
+    glm::mat4 nodeTransformation = aiMat4ToGLM(node->mTransformation);
     glm::mat4 transformation = transform * nodeTransformation;
     
     if (boneNameIndex.find(node->mName.data) != boneNameIndex.end())
@@ -84,6 +193,7 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
 
     vertToBones.resize(mesh->mNumVertices);
 
+
     if (mesh->HasBones())
     {
         for (unsigned int i = 0; i < mesh->mNumBones; i++)
@@ -102,14 +212,13 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
 
             if (boneID == boneInfo.size())
             {
-                glm::mat4 offsetTemp = aiMatToGLM(mesh->mBones[i]->mOffsetMatrix);
+                glm::mat4 offsetTemp = aiMat4ToGLM(mesh->mBones[i]->mOffsetMatrix);
                 BoneInfo temp(offsetTemp);
                 boneInfo.push_back(temp);
             }
 
             for (int j = 0; j < mesh->mBones[i]->mNumWeights; j++)
             {
-
                 vertToBones[mesh->mBones[i]->mWeights[j].mVertexId].addBoneData(boneID, mesh->mBones[i]->mWeights[j].mWeight);
 
             }
@@ -143,15 +252,23 @@ Mesh modelImporter::fillMesh(aiMesh* mesh)
         else
             vertex.texUV = glm::vec2(0.0f, 0.0f);
 
-        vertex.IDs.x = vertToBones[i].boneIDs[0];
-        vertex.IDs.y = vertToBones[i].boneIDs[1];
-        vertex.IDs.z = vertToBones[i].boneIDs[2];
-        vertex.IDs.w = vertToBones[i].boneIDs[3];
+        if (mesh->HasBones())
+        {
+            vertex.IDs.w = vertToBones[i].boneIDs[0];
+            vertex.IDs.x = vertToBones[i].boneIDs[1];
+            vertex.IDs.y = vertToBones[i].boneIDs[2];
+            vertex.IDs.z = vertToBones[i].boneIDs[3];
 
-        vertex.weights.x = vertToBones[i].boneWeights[0];
-        vertex.weights.y = vertToBones[i].boneWeights[1];
-        vertex.weights.z = vertToBones[i].boneWeights[2];
-        vertex.weights.w = vertToBones[i].boneWeights[3];
+            vertex.weights.w = vertToBones[i].boneWeights[0];
+            vertex.weights.x = vertToBones[i].boneWeights[1];
+            vertex.weights.y = vertToBones[i].boneWeights[2];
+            vertex.weights.z = vertToBones[i].boneWeights[3];
+        }
+        else
+        {
+            vertex.IDs.x = -2;
+        }
+        
 
         vertices.push_back(vertex);
     }
@@ -187,7 +304,7 @@ std::vector<Texture> modelImporter::loadTextures(aiMaterial* mat, aiTextureType 
         aiString str;
         mat->GetTexture(type, i, &str);
         std::string name = str.C_Str();
-        if (name.find("C:")== std::string::npos)
+        if (name.find(":")== std::string::npos)
         {
             name = tempDir + name;
         }

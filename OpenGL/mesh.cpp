@@ -1,12 +1,5 @@
 #include "mesh.h"
 
-void showMatrixA(glm::mat4 mat)
-{
-	std::cout << mat[0][0] << " " << mat[1][0] << " " << mat[2][0] << " " << mat[3][0] << std::endl;
-	std::cout << mat[0][1] << " " << mat[1][1] << " " << mat[2][1] << " " << mat[3][1] << std::endl;
-	std::cout << mat[0][2] << " " << mat[1][2] << " " << mat[2][2] << " " << mat[3][2] << std::endl;
-	std::cout << mat[0][3] << " " << mat[1][3] << " " << mat[2][3] << " " << mat[3][3] << std::endl << std::endl;
-}
 Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vector<Texture>& textures)
 {
 	Mesh::vertices = vertices;
@@ -22,7 +15,7 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vec
 	vao.linkAttrib(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
 	vao.linkAttrib(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
 	vao.linkAttrib(VBO, 3, 4, GL_FLOAT, sizeof(Vertex), (void*)(8 * sizeof(float)));
-	vao.linkAttrib(VBO, 4, 4, GL_INT, sizeof(Vertex), (void*)(12 * sizeof(int)));
+	vao.linkAttrib(VBO, 4, 4, GL_INT, sizeof(Vertex), (void*)(12 * sizeof(float)));
 
 	vao.unbind();
 	VBO.unbind();
@@ -82,7 +75,14 @@ void Mesh::Draw(Shader& shader, Camera& camera, glm::mat4 matrix, std::vector <g
 		std::string name = "bones[" + std::to_string(i) + "]";
 		glUniformMatrix4fv(glGetUniformLocation(shader.program, name.c_str()), 1, GL_FALSE, glm::value_ptr(bones[i]));
 	}
-	
+	//if (max > 5)
+	//{
+	//	for (int i = 0; i < vertices.size(); i++)
+	//	{
+	//		for (int j = 0; j<4;j++)
+	//			std::cout << vertices[i].IDs[j] << " " << vertices[i].weights[j] << std::endl;
+	//	}
+	//}
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
 }

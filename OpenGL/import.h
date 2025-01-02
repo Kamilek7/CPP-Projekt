@@ -1,9 +1,9 @@
 #ifndef IMPORTERERR_H
 #define IMPORTERERR_H
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+
+#include "nodeStructure.h"
 #include "mesh.h"
+#include "animation.h"
 #include <map>
 
 const int maxAmountOfModels = 20;
@@ -24,9 +24,16 @@ class modelImporter
 	std::vector <BoneInfo> boneInfo;
 	std::vector <glm::mat4> boneTransforms;
 
-	std::vector <std::string> loadedModels;
+	std::map <std::string,Animation> animations;
+
+	std::string loadedModels[maxAmountOfModels];
 	std::vector <Mesh> loadedMeshes[maxAmountOfModels] = {};
 	std::vector <glm::mat4> loadedBoneTransforms[maxAmountOfModels] = {};
+
+	std::vector<Scales> getAnimationScales(const aiNodeAnim* animation);
+	std::vector<Rotations> getAnimationRotations(const aiNodeAnim* animation);
+	std::vector<Translations> getAnimationTranslations(const aiNodeAnim* animation);
+	void processAnimations(int id);
 
 	void crawlNodes(aiNode* node, glm::mat4& transform);
 	Mesh fillMesh(aiMesh* mesh);
@@ -34,11 +41,20 @@ class modelImporter
 
 public:
 	modelImporter() {};
+
+	
 	void loadModel(const char* file);
+	BoneTree getBoneStructure() {return BoneTree(this->scene->mRootNode, boneNameIndex);}
+	std::vector<BoneInfo> getBoneInfo() { 
+			return boneInfo; 
+	}
 	std::vector<Mesh> getMeshes() { return meshes; }
-	std::vector<glm::mat4> getBoneTransforms() { return boneTransforms; }
+	std::vector<glm::mat4> getBoneTransforms() { 
+			return boneTransforms; 
+	}
+	std::map <std::string,Animation> getAnimations() { return animations; }
 	std::vector<Texture> loadTextures(aiMaterial* mat, aiTextureType type, const char* typeName);
-	void clear() { meshes = {}; loadedNames = {}; loadedTex = {}; vertToBones = {}; boneNameIndex = {}; boneTransforms = {}; boneInfo = {}; }
+	void clear() { meshes = {}; loadedNames = {}; loadedTex = {}; vertToBones = {}; boneNameIndex = {}; boneTransforms = {}; boneInfo = {}; animations = {}; }
 };
 
 #endif // !1

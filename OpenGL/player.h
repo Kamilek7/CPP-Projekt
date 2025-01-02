@@ -17,6 +17,8 @@ public:
 	int lives = 3;
 	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/bartek.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
+		this->model.animations["breathing"].setUp(true);
+		this->model.playAnimation("breathing");
 		this->window = _window;
 		this->disableRotation();
 		this->model.linOffset.y += 0.3;

@@ -30,5 +30,5 @@ void ingameObject::scaleTo(double x, double y, double z)
 void ingameObject::process(float dt, Shader& shader, Camera &camera)
 {
 	this->time += dt;
-	this->model.draw(shader, camera);
+	this->model.draw(shader, camera, dt);
 }

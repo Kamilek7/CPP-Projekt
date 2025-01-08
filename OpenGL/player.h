@@ -7,6 +7,9 @@
 class Player :public physicsObject
 {
 	GLFWwindow* window;
+	bool running = false;
+	bool animWalkTrigger = false;
+	bool animIdleTrigger = false;
 	int height;
 	int width;
 	int iters = 0;
@@ -18,6 +21,7 @@ public:
 	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/bartek.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		this->model.animations["breathing"].setUp(true);
+		this->model.animations["running"].setUp(true);
 		this->model.playAnimation("breathing");
 		this->window = _window;
 		this->disableRotation();
@@ -47,18 +51,20 @@ public:
 			{
 
 				temp += camera.Orientation;
-
 			}
+
 			if (a)
 			{
 				temp += -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
 
 			}
+
 			if (s)
 			{
 				temp += -camera.Orientation;
 
 			}
+
 			if (d)
 			{
 				temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
@@ -67,6 +73,8 @@ public:
 			
 			if (temp.x != 0 && temp.z != 0)
 			{
+				this->running = true;
+
 				temp = glm::normalize(temp);
 				Vector3 vec(temp.x, 0, temp.z);
 				glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
@@ -86,9 +94,16 @@ public:
 				vec = vec * (glm::length(temp)) / vec.length();
 				body->applyLocalForceAtCenterOfMass(vec * 10);
 			}
+			else
+			{
+				this->running = false;
+			}
 
 
-
+		}
+		else
+		{
+			this->running = false;
 		}
 
 		if (space)
@@ -145,7 +160,30 @@ public:
 		camera.Orientation = glm::rotate(camera.Orientation, glm::radians(-rotY), camera.Up);
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 
+
+
 		location = this->model.translation;
+
+		if (this->running)
+		{
+			if (this->animWalkTrigger)
+			{
+				this->animWalkTrigger = false;
+				this->model.playAnimation("running");
+			}
+			if (!this->animIdleTrigger)
+			this->animIdleTrigger = true;
+		}
+		else
+		{
+			if (this->animIdleTrigger)
+			{
+				this->animIdleTrigger = false;
+				this->model.playAnimation("breathing");
+			}
+			if (!this->animWalkTrigger)
+				this->animWalkTrigger = true;
+		}
 	}
 	void getInfoFromPhys()
 	{

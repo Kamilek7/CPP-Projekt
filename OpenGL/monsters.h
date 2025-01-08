@@ -10,6 +10,7 @@ private:
     int lives = 1; // Liczba zyc potwora (domyslnie 1)
 	double cooldown = 3;
 	double jumpCooldown = 2;
+	double heightOffset= 0.09f;
 
 public:
 	Monster(const char* name, modelImporter* importer, Physics* phys, glm::vec3 size) : NPC(name, importer, phys, size)
@@ -19,6 +20,14 @@ public:
 	}
 	void collidedWith(Body* bd)
 	{
+		glm::vec3 dif = ((physicsObject*)(bd->getUserData()))->model.translation - this->model.translation;
+
+		Vector3 vec;
+		vec.x = dif.x * 25;
+		vec.y = 50*(dif.y-heightOffset);
+		vec.z = 25*dif.z;
+
+		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec*200);
 		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
 	}
 	void process(float dt, Shader& shader, Camera& camera)

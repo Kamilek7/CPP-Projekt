@@ -7,12 +7,11 @@ class ingameObject
 {
 protected:
 	float time;
-	glModel model;
+	
 	
 
 public:
-
-	int ID;
+	glModel model;
 	ingameObject(const char* name, modelImporter* importer);
 	virtual void translate(double x=0.0, double y=0.0, double z=0.0, double scale=1.0);
 

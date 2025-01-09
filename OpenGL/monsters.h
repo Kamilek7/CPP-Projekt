@@ -24,7 +24,7 @@ public:
 
 		Vector3 vec;
 		vec.x = dif.x * 25;
-		vec.y = 50*(dif.y-heightOffset);
+		vec.y = 80*(dif.y-heightOffset);
 		vec.z = 25*dif.z;
 
 		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec*200);

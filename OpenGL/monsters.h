@@ -7,7 +7,7 @@
 class Monster : public NPC
 {
 private:
-    int lives; // Liczba �y� potwora
+    int lives; // Liczba zyc potwora (domyslnie 1)
     std::chrono::steady_clock::time_point lastDamageTime;
     std::chrono::steady_clock::time_point lastJumpTime;   
 

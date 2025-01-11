@@ -13,4 +13,5 @@
 ## 23.12.24r. - Zaprogramowanie generacji pokojow
 ## 30.12.24r. - Dorzucenie animacji do modeli
 ## 06.01.25r. - Dorzucenie animacji do modeli
-## 13.01.25r. - Koniec?
+## 13.01.25r. - Dalsze oprogramowanie wrogow i NPC - koniec gry po bossie
+## 20.01.25r. - Dodanie jakiegos GUI

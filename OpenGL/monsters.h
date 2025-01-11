@@ -30,6 +30,12 @@ public:
 		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec*200);
 		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
 	}
+
+	virtual void additionalMovement(float dt)
+	{
+
+	}
+
 	void process(float dt, Shader& shader, Camera& camera)
 	{
 		if (this->isDead())
@@ -48,6 +54,8 @@ public:
 			{
 				this->jumpCooldown -= dt;
 			}
+
+			this->additionalMovement(dt);
 
 			if (glm::length(*this->playerPos - this->model.translation) < 5)
 			{

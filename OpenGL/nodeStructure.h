@@ -85,6 +85,12 @@ public:
 			processAiNode(node->mChildren[i], temp);
 		}
 	}
+	void clear()
+	{
+		this->root = nullptr;
+
+		// Reszta pozniej
+	}
 };
 
 

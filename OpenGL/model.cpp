@@ -80,8 +80,6 @@ void glModel::traverseNodeAndGetTransforms(SingleBoneTreeNode* node, glm::mat4 t
 	glm::mat4 bonedTransformation = node->nodeTransformation;
 	if (node->boneId != -1)
 	{
-		
-
 		aiQuaternion tempRot = animations[currentAnimName].getInterpolatedRotation(time, node->boneId);
 		glm::vec3 currentPos = animations[currentAnimName].getInterpolatedPosition(time, node->boneId);
 		glm::vec3 currentScale = animations[currentAnimName].getInterpolatedScale(time, node->boneId);

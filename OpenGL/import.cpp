@@ -127,31 +127,60 @@ void modelImporter::processAnimations(int id)
 
 void modelImporter::loadModel(const char* file)
 {
-	scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
-	fileStr = std::string(file);
-	dir = fileStr.substr(0, fileStr.find_last_of('/'));
-    glm::mat4 temp(1.0f);
+    fileStr = std::string(file);
+    dir = fileStr.substr(0, fileStr.find_last_of('/'));
 
-    crawlNodes(scene->mRootNode, temp);
-
-    if (this->scene->mNumAnimations > 0)
+    int found = -1;
+    for (int i = 0; i < maxAmountOfModels; i++)
     {
-        
-        for (int i = 0; i < scene->mNumAnimations; i++)
+        if (dir == loadedModels[i])
         {
-
-            this->processAnimations(i);
-
+            found = i;
+            break;
         }
     }
-    for (int i = 0; i < boneInfo.size(); i++)
-    {
-        boneTransforms.push_back(boneInfo[i].transform);
-    }
-  
- 
-    
 
+    if (found!=-1)
+    {
+        this->meshes = loadedMeshes[found];
+        this->animations = loadedAnimations[found];
+        this->boneTransforms = loadedBoneTransforms[found];
+        this->boneInfo = loadedBoneInfo[found];
+        this->boneTre = loadedBoneTrees[found];
+    }
+    else
+    {
+        scene = importer.ReadFile(file, aiProcess_Triangulate | aiProcess_GenSmoothNormals | aiProcess_JoinIdenticalVertices);
+
+        glm::mat4 temp(1.0f);
+
+        crawlNodes(scene->mRootNode, temp);
+
+        if (this->scene->mNumAnimations > 0)
+        {
+
+            for (int i = 0; i < scene->mNumAnimations; i++)
+            {
+
+                this->processAnimations(i);
+
+            }
+        }
+        for (int i = 0; i < boneInfo.size(); i++)
+        {
+            boneTransforms.push_back(boneInfo[i].transform);
+        }
+
+        this->boneTre = BoneTree(this->scene->mRootNode, boneNameIndex);
+
+        loadedModels[totalModels] = dir;
+        loadedMeshes[totalModels] = this->meshes;
+        loadedAnimations[totalModels] = this->animations;
+        loadedBoneTransforms[totalModels] = this->boneTransforms;
+        loadedBoneInfo[totalModels] = this->boneInfo;
+        loadedBoneTrees[totalModels] = this->boneTre;
+        totalModels++;
+    }
 
 }
 

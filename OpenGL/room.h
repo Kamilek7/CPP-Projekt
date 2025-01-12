@@ -103,7 +103,7 @@ private:
 			int pick = std::rand() % this->map.edges.size();
 			while (this->map.edges[pick]->position == endLocation)
 			{
-				int pick = std::rand() % this->map.edges.size();
+				pick = std::rand() % this->map.edges.size();
 			}
 			extraBossLocation = this->map.edges[pick]->position;
 		}

@@ -92,8 +92,8 @@ public:
 				this->model.rotation = rot;
 
 				vec = vec * (glm::length(temp)) / vec.length();
-				body->resetForce();
-				body->applyLocalForceAtCenterOfMass(vec * 10);
+				body->setLinearVelocity(Vector3(0, this->body->getLinearVelocity().y, 0));
+				body->applyLocalForceAtCenterOfMass(vec * 200);
 			}
 			else
 			{

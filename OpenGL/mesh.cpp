@@ -32,10 +32,13 @@ void Mesh::unwrapTexCoords(glm::vec2 scale)
 	vao.bind();
 	VBO VBO(vertices);
 	EBO EBO(indices);
+
 	vao.linkAttrib(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
 	vao.linkAttrib(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-	vao.linkAttrib(VBO, 2, 3, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
-	vao.linkAttrib(VBO, 3, 2, GL_FLOAT, sizeof(Vertex), (void*)(9 * sizeof(float)));
+	vao.linkAttrib(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
+	vao.linkAttrib(VBO, 3, 4, GL_FLOAT, sizeof(Vertex), (void*)(8 * sizeof(float)));
+	vao.linkAttrib(VBO, 4, 4, GL_INT, sizeof(Vertex), (void*)(12 * sizeof(float)));
+
 	vao.unbind();
 	VBO.unbind();
 	EBO.unbind();

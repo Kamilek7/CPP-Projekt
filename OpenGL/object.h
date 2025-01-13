@@ -7,7 +7,7 @@ class ingameObject
 {
 protected:
 	float time;
-	
+	glm::vec2 texScale = {0,0 };
 	
 
 public:

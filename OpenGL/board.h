@@ -7,8 +7,10 @@
 
 class GameComponents
 {
-	int WINDOW_WIDTH = 1000;
-	int WINDOW_HEIGHT = 1000;
+	int WINDOW_WIDTH = 800;
+	int WINDOW_HEIGHT = 600;
+	int REMEMBERED_WIDTH = WINDOW_WIDTH;
+	int REMEMBERED_HEIGHT = WINDOW_HEIGHT;
 	int mode = 1;
 	unsigned int MAX_FPS = 120;
 	double fpsTime = 1 / double(MAX_FPS);

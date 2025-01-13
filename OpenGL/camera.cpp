@@ -1,6 +1,6 @@
 #include "camera.h"
 
-Camera::Camera(int width, int height, glm::vec3 position)
+Camera::Camera(int* width, int* height, glm::vec3 position)
 {
 	Camera::width = width;
 	Camera::height = height;
@@ -15,7 +15,7 @@ void Camera::update(float FOVdeg, float nearPlane, float farPlane)
 	glm::vec3 transformedPos = Position;
 	transformedPos.y += 0.5;
 	view = glm::lookAt(transformedPos - Orientation, transformedPos, Up);
-	projection = glm::perspective(glm::radians(FOVdeg), (float)(width / height), nearPlane, farPlane);
+	projection = glm::perspective(glm::radians(FOVdeg), (float)*width / (float)*height, nearPlane, farPlane);
 	cameraMatrix = projection * view;
 }
 

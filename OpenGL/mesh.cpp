@@ -22,27 +22,6 @@ Mesh::Mesh(std::vector<Vertex>& vertices, std::vector<GLuint>& indices, std::vec
 	EBO.unbind();
 }
 
-void Mesh::unwrapTexCoords(glm::vec2 scale)
-{
-
-	for (int i = 0; i < this->vertices.size(); i++)
-	{
-		this->vertices[i].texUV = glm::vec2(this->vertices[i].texUV.y/scale.y, this->vertices[i].texUV.x / scale.x);
-	}
-	vao.bind();
-	VBO VBO(vertices);
-	EBO EBO(indices);
-
-	vao.linkAttrib(VBO, 0, 3, GL_FLOAT, sizeof(Vertex), (void*)0);
-	vao.linkAttrib(VBO, 1, 3, GL_FLOAT, sizeof(Vertex), (void*)(3 * sizeof(float)));
-	vao.linkAttrib(VBO, 2, 2, GL_FLOAT, sizeof(Vertex), (void*)(6 * sizeof(float)));
-	vao.linkAttrib(VBO, 3, 4, GL_FLOAT, sizeof(Vertex), (void*)(8 * sizeof(float)));
-	vao.linkAttrib(VBO, 4, 4, GL_INT, sizeof(Vertex), (void*)(12 * sizeof(float)));
-
-	vao.unbind();
-	VBO.unbind();
-	EBO.unbind();
-}
 
 void Mesh::Draw(Shader& shader, Camera& camera, glm::mat4 matrix, std::vector <glm::mat4> bones)
 {

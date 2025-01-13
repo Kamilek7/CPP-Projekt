@@ -30,5 +30,6 @@ void ingameObject::scaleTo(double x, double y, double z)
 void ingameObject::process(float dt, Shader& shader, Camera &camera)
 {
 	this->time += dt;
+	glUniform2f(glGetUniformLocation(shader.program, "texScaler"), this->texScale.x, this->texScale.y);
 	this->model.draw(shader, camera, dt);
 }

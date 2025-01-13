@@ -20,12 +20,12 @@ public:
 	glm::mat4 cameraMatrix = glm::mat4(1.0f);
 	glm::vec3 offset = glm::vec3(-0.8f, 0.9f, 0.0f);
 
-	int width;
-	int height;
+	int* width;
+	int* height;
 
 
 	Camera() {};
-	Camera(int width, int height, glm::vec3 position);
+	Camera(int* width, int* height, glm::vec3 position);
 
 	void update(float FOVdeg, float nearPlane, float farPlane);
 	void matrix(Shader shader, const char* uniform);

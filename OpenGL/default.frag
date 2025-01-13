@@ -11,6 +11,7 @@ flat in ivec4 IDsPass;
 uniform sampler2D diffuse0;
 uniform sampler2D specular0;
 
+uniform vec2 texScaler;
 uniform vec3 camPos;
 
 struct PointLight {    
@@ -20,7 +21,7 @@ struct PointLight {
 
 uniform PointLight pointLights[NR_LIGHTS];
 
-vec4 calcPointLight(PointLight light)
+vec4 calcPointLight(PointLight light, vec2 TexCoord)
 {
 	vec4 result = vec4(0.0f);
 
@@ -42,7 +43,7 @@ vec4 calcPointLight(PointLight light)
 		vec3 reflectionDirection = reflect(-lightDirection, normal);
 		float specAmount = pow(max(dot(viewDirection, reflectionDirection), 0.0f), 16);
 		float specular = specAmount * specularLight;
-		result = (texture(diffuse0, texCoord) * (diffuse * inten) + texture(specular0, texCoord).r * specular * inten) * light.lightColor;
+		result = (texture(diffuse0, TexCoord) * (diffuse * inten) + texture(specular0, TexCoord).r * specular * inten) * light.lightColor;
 	}
 	return result;
 
@@ -50,11 +51,22 @@ vec4 calcPointLight(PointLight light)
 
 void main()
 {
+	vec2 TexCoord;
+	if (texScaler[0]!=0 && texScaler[1]!=0)
+	{
+		TexCoord[0] = texCoord[1]*texScaler[1];
+		TexCoord[1] = texCoord[0]*texScaler[0];
+	}
+	else
+	{
+			TexCoord[0] = texCoord[0];
+			TexCoord[1] = texCoord[1];
+	}
 	vec4 result;
 
 	for(int i = 0; i < NR_LIGHTS; i++)
-        result += calcPointLight(pointLights[i]);
-	result += texture(diffuse0, texCoord)*0.1f;
+        result += calcPointLight(pointLights[i], TexCoord);
+	result += texture(diffuse0, TexCoord)*0.2f;
 
 
 	FragColor = result;

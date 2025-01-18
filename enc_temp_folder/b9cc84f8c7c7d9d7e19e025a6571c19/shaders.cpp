@@ -20,7 +20,7 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 {
 	std::string vertexCode = getContents(vertFile);
 	std::string fragCode = getContents(fragFile);
-	std::cout << fragCode << std::endl;
+
 	// ta
 	fragCode = std::string(fragCode.begin(), fragCode.begin() + 18) + "#define NR_LIGHTS " + std::to_string(lightNum) + "\n" + std::string(fragCode.begin() + 19, fragCode.end());
 

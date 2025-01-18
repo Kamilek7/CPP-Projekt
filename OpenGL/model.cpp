@@ -1,4 +1,5 @@
 #include "model.h"
+#include "import.h"
 glModel::glModel(const char* filer, modelImporter* importer)
 {
 	importer->loadModel(filer);

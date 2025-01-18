@@ -27,6 +27,7 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 	const char* vertSource = vertexCode.c_str();
 	const char* fragSource = fragCode.c_str();
 
+	std::cout << fragCode << std::endl;
 	// Tworzymy i kompilujemy vertex shader (czyli jakby ksztalt naszego obiektu)
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 	glShaderSource(vertexShader, 1, &vertSource, NULL);

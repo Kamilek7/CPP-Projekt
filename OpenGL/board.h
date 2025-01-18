@@ -7,17 +7,16 @@
 
 class GameComponents
 {
-	int WINDOW_WIDTH = 1000;
-	int WINDOW_HEIGHT = 1000;
+	int WINDOW_WIDTH = 800;
+	int WINDOW_HEIGHT = 600;
+	int REMEMBERED_WIDTH = WINDOW_WIDTH;
+	int REMEMBERED_HEIGHT = WINDOW_HEIGHT;
 	int mode = 1;
 	unsigned int MAX_FPS = 120;
 	double fpsTime = 1 / double(MAX_FPS);
 	modelImporter importer;
-	Shader shaderProgram;
-	glm::vec4 lightColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 	Camera camera;
-	std::vector <Room*> rooms;
+	Room* mainLocation;
 
 	Physics phys;
 

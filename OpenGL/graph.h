@@ -7,15 +7,13 @@
 #include <vector>
 #include <map>
 #include <iostream>
-
-// To nie jest graf, ale na poczatku to mial byc graf wiec nazwy zostaly
+#include <queue>
 
 class NodeMap
 {
 public:
 	std::pair <int, int> position;
 	std::vector <NodeMap*> children;
-	NodeMap* parent;
 	int directions[4] = { -1,-1,-1,-1 };
 	int whereParent = -1;
 	NodeMap(std::pair <int, int> pos)
@@ -28,39 +26,52 @@ public:
 	}
 	void addParentNode(NodeMap* parent, int whereParent)
 	{
-		this->parent = parent;
 		this->whereParent = whereParent;
+		this->children.push_back(parent);
+		this->directions[whereParent] = this->children.size() - 1;
 	}
 
 };
 class GraphMap
 {
 public:
-	
 	std::map<std::pair <int, int>, NodeMap*> map;
 	int mainIters = 0;
+	int maxRooms = 35;
 	int iters = 0;
 	int max = 5;
 	int dimensions[4] = { 0,0,0,0 };
+
+	std::vector<NodeMap*> edges = {};
+
 	GraphMap()
 	{
+		std::srand(time(NULL));
 		std::pair <int, int> pair = std::make_pair(0, 0);
 		map[pair] = new NodeMap(pair);
 		
 		branchNode(map[pair], 4);
-		showGraphStructure();
+		//showGraphStructure();
+		for (int i = 0; i < edges.size(); i++)
+		{
+			if (edges[i]->children.size() > 1)
+			{
+				edges.erase(edges.begin() + i);
+				i--;
+			}
+		}
 	 }
 
 	void branchNode(NodeMap* node, int numAvDirections)
 	{
-		std::srand(time(NULL));
+		
 		int directionNum = std::rand() % numAvDirections + 1;
 
 		// 0 -> North
 		// 1 -> South
 		// 2 -> East
 		// 3 -> West
-		if (mainIters < 5)
+		if (mainIters < 7)
 		{
 			if (iters < max)
 			{
@@ -99,8 +110,19 @@ public:
 						map[newPos]->addParentNode(node, parentPos);
 						node->addChildNode(map[newPos], pick);
 
+						
 						iters++;
-						branchNode(map[newPos], 3);
+						maxRooms--;
+						if (maxRooms > 0)
+						{
+							branchNode(map[newPos], 3);
+						}
+						else
+						{
+							edges.push_back(map[newPos]);
+						}
+							
+						
 
 					}
 					else
@@ -117,10 +139,44 @@ public:
 			{
 				mainIters++;
 				iters = 0;
-				max = std::rand() % 7 + 2;
+				max = std::rand() % 9 + 3;
 			}
 		}
 	}
+	std::vector<NodeMap*> getShortestPath(std::pair <int, int> start, std::pair <int, int> end)
+	{
+		std::map<NodeMap*, NodeMap*> parent;
+		std::map<NodeMap*, bool> visited;
+		std::queue<NodeMap*> Q;
+		visited[map[start]] = true;
+		Q.push(map[start]);
+		while (!Q.empty()) {
+
+			NodeMap* curr = Q.front();
+			Q.pop();
+			for (int i = 0; i < curr->children.size(); i++) {
+				if (!visited[curr->children[i]]) {
+					visited[curr->children[i]] = true;
+					Q.push(curr->children[i]);
+					parent[curr->children[i]] = curr;
+				}
+			}
+		}
+		std::vector<NodeMap*> A = {};
+		NodeMap* node = map[end];
+		while (node->position != start)
+		{
+			A.push_back(node);
+			node = parent[node];
+		}
+
+		node = nullptr;
+		delete node;
+
+		return A;
+
+	}
+
 private:
 	int getOppositeDirection(int direction)
 	{
@@ -141,8 +197,8 @@ private:
 				std::pair <int, int> pos = std::make_pair(x, y);
 				if (map.find(pos) != map.end())
 				{
-					if (map[pos]->whereParent == 3 || map[pos]->directions[3] != -1)
-						std::cout << "x";
+					if (map[pos]->directions[3] != -1)
+						std::cout << "-";
 					else
 						std::cout << " ";
 					std::cout << "x";
@@ -159,8 +215,8 @@ private:
 				if (map.find(pos) != map.end())
 				{
 					std::cout << " ";
-					if (map[pos]->whereParent == 1 || map[pos]->directions[1] != -1)
-						std::cout << "x";
+					if (map[pos]->directions[1] != -1)
+						std::cout << "|";
 					else
 						std::cout << " ";
 					

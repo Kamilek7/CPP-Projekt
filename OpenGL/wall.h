@@ -4,6 +4,7 @@
 
 #include "physicsObject.h"
 class Wall:public physicsObject {
+
 public:
 	Wall(modelImporter* importer, Physics* phys, glm::vec3 size) :physicsObject("resources/brickWall/mur.gltf", importer, phys, size, false)
 	{
@@ -13,10 +14,10 @@ public:
 			scaler.x = size.z;
 		else if (size.y < size.z)
 			scaler.y = size.z;
-		double SCALE = 0.02;
-		scaler = glm::vec2(scaler.x * SCALE, scaler.y * SCALE);
-		for (int i = 0; i < this->model.meshes.size(); i++)
-			this->model.meshes[i].unwrapTexCoords(scaler);
+		float SCALE = 5;
+		
+		this->texScale = glm::vec2(scaler.y, scaler.x) * SCALE;
+
 	}
 	void process(float dt, Shader& shader, Camera& camera)
 	{

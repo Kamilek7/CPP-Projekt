@@ -7,6 +7,9 @@
 class Player :public physicsObject
 {
 	GLFWwindow* window;
+	bool running = false;
+	bool animWalkTrigger = false;
+	bool animIdleTrigger = false;
 	int height;
 	int width;
 	int iters = 0;
@@ -15,12 +18,15 @@ class Player :public physicsObject
 public:
 	glm::vec3 location;
 	int lives = 3;
-	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/untitled.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
+	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/bartek.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
+		this->model.animations["breathing"].setUp(true);
+		this->model.animations["running"].setUp(true);
+		this->model.playAnimation("breathing");
 		this->window = _window;
 		this->disableRotation();
-		this->model.linOffset.y += 0.25;
-		this->model.scale = glm::vec3(0.5, 0.5, 0.5);
+		this->model.linOffset.y += 0.3;
+		this->model.scale = glm::vec3(0.05, 0.05, 0.05);
 		this->body->setLinearDamping(5);
 
 	}
@@ -45,44 +51,60 @@ public:
 			{
 
 				temp += camera.Orientation;
-
 			}
+
 			if (a)
 			{
 				temp += -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
 
 			}
+
 			if (s)
 			{
 				temp += -camera.Orientation;
 
 			}
+
 			if (d)
 			{
 				temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
 			}
-			temp = glm::normalize(temp);
 
-			Vector3 vec(temp.x, 0, temp.z);
-
-			glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
-			glm::vec3 test = glm::vec3(1, 0, 0);
-
-			float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
-
-			if (temp.z > 0)
+			
+			if (temp.x != 0 && temp.z != 0)
 			{
-				angle = 8 * acos(1) - angle;
+				this->running = true;
+
+				temp = glm::normalize(temp);
+				Vector3 vec(temp.x, 0, temp.z);
+				glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
+				glm::vec3 test = glm::vec3(1, 0, 0);
+
+				float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
+
+				if (temp.z > 0)
+				{
+					angle = 8 * acos(1) - angle;
+				}
+
+				glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
+
+				this->model.rotation = rot;
+
+				vec = vec * (glm::length(temp)) / vec.length();
+				body->setLinearVelocity(Vector3(0, this->body->getLinearVelocity().y, 0));
+				body->applyLocalForceAtCenterOfMass(vec * 200);
+			}
+			else
+			{
+				this->running = false;
 			}
 
-			glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
 
-			this->model.rotation = rot;
-
-			vec = vec * (glm::length(temp)) / vec.length();
-			body->applyLocalForceAtCenterOfMass(vec * 10);
-
-
+		}
+		else
+		{
+			this->running = false;
 		}
 
 		if (space)
@@ -139,7 +161,30 @@ public:
 		camera.Orientation = glm::rotate(camera.Orientation, glm::radians(-rotY), camera.Up);
 		glfwSetCursorPos(window, (width / 2), (height / 2));
 
+
+
 		location = this->model.translation;
+
+		if (this->running)
+		{
+			if (this->animWalkTrigger)
+			{
+				this->animWalkTrigger = false;
+				this->model.playAnimation("running");
+			}
+			if (!this->animIdleTrigger)
+			this->animIdleTrigger = true;
+		}
+		else
+		{
+			if (this->animIdleTrigger)
+			{
+				this->animIdleTrigger = false;
+				this->model.playAnimation("breathing");
+			}
+			if (!this->animWalkTrigger)
+				this->animWalkTrigger = true;
+		}
 	}
 	void getInfoFromPhys()
 	{
@@ -161,7 +206,7 @@ public:
 		if(lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
 		{
 			lives--;
-			std::cout << "Straci³eœ ¿ycie!" << std::endl;
+			std::cout << "StraciÂ³eÅ“ Â¿ycie!" << std::endl;
 			cooldown = 0;
 		}
 		

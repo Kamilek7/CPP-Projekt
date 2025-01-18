@@ -3,63 +3,94 @@
 
 #include "npc.h"
 #include <chrono>
+#include <algorithm>
 
 class Monster : public NPC
 {
 private:
-    int lives; // Liczba zyc potwora (domyslnie 1)
-    std::chrono::steady_clock::time_point lastDamageTime;
-    std::chrono::steady_clock::time_point lastJumpTime;   
+	int lives = 1; // Liczba zyc potwora (domyslnie 1)
+	double cooldown = 3;
+	double jumpCooldown = 2;
+	double heightOffset = 0.09f;
 
 public:
-    Monster(const char* name, modelImporter* importer, Physics* phys, glm::vec3 size) 
-        : NPC(name, importer, phys, size), lives(2), lastDamageTime(std::chrono::steady_clock::now())
-    {
-        double scale = 0.005;
-        this->model.scale = glm::vec3(scale, scale, scale);
-    }
+	Monster(const char* name, modelImporter* importer, Physics* phys, glm::vec3 size) : NPC(name, importer, phys, size)
+	{
+		double scale = 0.005;
+		this->model.scale = glm::vec3(scale, scale, scale);
+	}
+	void collidedWith(Body* bd)
+	{
+		glm::vec3 dif = ((physicsObject*)(bd->getUserData()))->model.translation - this->model.translation;
 
-    void collidedWith(Body* bd)
-    {
-        std::vector<physicsObject*> test = *(std::vector<physicsObject*>*)(bd->getUserData());
-        ((*(std::vector<physicsObject*>*)(bd->getUserData()))[0])->collidedWithMonster();
-    }
+		Vector3 vec;
+		vec.x = dif.x * 25;
+		vec.y = std::min(abs(80 * (dif.y - heightOffset)), 3.0);
+		vec.z = 25 * dif.z;
 
-    void collidedWithPlayer()
-    {
-        auto currentTime = std::chrono::steady_clock::now();
-        if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastDamageTime).count() >= 3)
-        {
-            lastDamageTime = currentTime;
-            if (--lives <= 0)
-            {
-                this->dead = true;
-            }
-        }
-    }
+		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec * 200);
+		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
+	}
 
-    void process(float dt)
-    {
-        auto currentTime = std::chrono::steady_clock::now();
-        
-        const double jumpInterval = 3.0; 
-        const Vector3 jumpForce(0, 1.0, 0); 
+	virtual void additionalMovement(float dt)
+	{
 
-        // Automatyczny skok co 3 sekundy
-        if (std::chrono::duration_cast<std::chrono::seconds>(currentTime - lastJumpTime).count() >= jumpInterval)
-        {
-            if (this->body->getLinearVelocity().y <= 0.1) 
-            {
-                this->body->applyLocalForceAtCenterOfMass(jumpForce);
-                lastJumpTime = currentTime; 
-            }
-        }
-    }
+	}
 
-    int getLives() const
-    {
-        return lives;
-    }
+	void process(float dt, Shader& shader, Camera& camera)
+	{
+		if (this->isDead())
+		{
+			this->phys->world->destroyRigidBody(this->body);
+		}
+		else
+		{
+			this->getInfoFromPhys();
+			ingameObject::process(dt, shader, camera);
+			if (this->cooldown >= 0)
+			{
+				this->cooldown -= dt;
+			}
+			if (this->jumpCooldown >= 0)
+			{
+				this->jumpCooldown -= dt;
+			}
+
+			this->additionalMovement(dt);
+
+			if (glm::length(*this->playerPos - this->model.translation) < 5)
+			{
+				this->lookAtPlayer();
+				this->followPlayer();
+				if (this->body->getLinearVelocity().y <= 0.1 && this->jumpCooldown <= 0)
+				{
+					this->body->applyLocalForceAtCenterOfMass(Vector3(0.0, 500.0, 0.0));
+					this->jumpCooldown = 2;
+				}
+			}
+
+		}
+	}
+	void followPlayer()
+	{
+		glm::vec3 temp = glm::normalize(*this->playerPos - this->model.translation);
+		Vector3 vec(temp.x, 0, temp.z);
+
+		vec = vec * (glm::length(temp)) / vec.length();
+		body->applyLocalForceAtCenterOfMass(vec * 7);
+	}
+	void collidedWithPlayer()
+	{
+		if (this->cooldown <= 0)
+		{
+			this->cooldown = 3;
+			if (--lives <= 0)
+			{
+				this->dead = true;
+			}
+		}
+
+	}
 };
 
 #endif

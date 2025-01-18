@@ -25,8 +25,8 @@ public:
 
 		Vector3 vec;
 		vec.x = dif.x * 25;
-		vec.y = std::min(abs(80 * (dif.y - heightOffset)), 3.0);
-		vec.z = 25 * dif.z;
+		vec.y = std::min(abs(80*(dif.y-heightOffset)), 3.0);
+		vec.z = 25*dif.z;
 
 		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec * 200);
 		((physicsObject*)(bd->getUserData()))->collidedWithMonster();

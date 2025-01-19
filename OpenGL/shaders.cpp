@@ -20,13 +20,12 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 {
 	std::string vertexCode = getContents(vertFile);
 	std::string fragCode = getContents(fragFile);
-	std::cout << fragCode << std::endl;
+
 	// ta
 	fragCode = std::string(fragCode.begin(), fragCode.begin() + 18) + "#define NR_LIGHTS " + std::to_string(lightNum) + "\n" + std::string(fragCode.begin() + 19, fragCode.end());
 
 	const char* vertSource = vertexCode.c_str();
 	const char* fragSource = fragCode.c_str();
-
 
 	// Tworzymy i kompilujemy vertex shader (czyli jakby ksztalt naszego obiektu)
 	GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -39,16 +38,16 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 	glShaderSource(fragmentShader, 1, &fragSource, NULL);
 	glCompileShader(fragmentShader);
 
-	int bufflen;
-	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
-	GLchar* log_string = new char[bufflen + 1];
-	glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
-	std::cout << log_string << std::endl << std::endl;
+	//int bufflen;
+	//glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
+	//GLchar* log_string = new char[bufflen + 1];
+	//glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
+	//std::cout << log_string << std::endl << std::endl;
 
-	// glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
-	// GLchar* log_string = new char[bufflen + 1];
-	// glGetShaderInfoLog(vertexShader, bufflen, 0, log_string);
-	// std::cout << log_string;
+	//glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
+	//log_string = new char[bufflen + 1];
+	//glGetShaderInfoLog(vertexShader, bufflen, 0, log_string);
+	//std::cout << log_string;
 
 	// Ze skompilowanych shaderow tworzyny program ktory nam wszystko ladnie obsluzy - linkujemy wszystko razem
 	program = glCreateProgram();

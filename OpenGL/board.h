@@ -32,18 +32,19 @@ class GameComponents
 	double Clock = 0;
 	double current = 0;
 
-	
-
+	void drawMap(double zoom);
+	void drawRoom(std::pair<int, int> pos, double zoom);
+	void renderMenu();
+	void renderGame();
+	void renderDeath();
+	void renderEnd();
 public:
 	GLFWwindow* window;
 
 	GameComponents();
 	
 	void render();
-	void renderMenu();
-	void renderGame();
-	void renderDeath();
-	void renderEnd();
+
 	void end();
 };
 

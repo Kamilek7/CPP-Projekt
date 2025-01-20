@@ -33,13 +33,17 @@ class Room
 	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 
 	Player* player;
-	GraphMap map;
-	glm::vec3 size;
+	
+	
 	glm::vec3 position;
 
 	MyCollisionListener listener;
 
 public:
+	glm::vec3 size;
+	GraphMap map;
+	glm::vec3 getPlayerPos() { return this->player->location; }
+
 	Room(glm::vec3 position, glm::vec3 size, modelImporter* importer, Physics* phys, GLFWwindow* window)
 	{
 
@@ -141,7 +145,7 @@ private:
 					else if (pos == extraBossLocation)
 					{
 						lights.push_back(new Light(glm::vec3(2 * size.x * x, 1.5, 2 * size.z * y), lightColor));
-						objects.push_back(new Tsunomon(importer, phys, size , map));
+						objects.push_back(new Tsunomon(importer, phys, size , &map));
 						objects[objects.size() - 1]->translate(2 * x * size.x , 0.5, 2 * y * size.z );
 						objects[objects.size() - 1]->setPlayerLocation(&this->player->location);
 					}

@@ -48,6 +48,95 @@ void GameComponents::render()
         this->renderEnd();
 }
 
+void GameComponents::drawMap(double zoom)
+{
+    
+    for (int y =this->mainLocation->map.dimensions[3]; y >= this->mainLocation->map.dimensions[2]; y--)
+    {
+        for (int x = this->mainLocation->map.dimensions[0]; x <= this->mainLocation->map.dimensions[1]; x++)
+        {
+
+            std::pair <int, int> pos = std::make_pair(x, y);
+            if (this->mainLocation->map.map.find(pos) != this->mainLocation->map.map.end())
+            {
+                this->drawRoom(pos, zoom);
+            }
+        }
+    }
+}
+
+void GameComponents::drawRoom(std::pair <int, int> pos, double zoom)
+{
+
+    float thickness = 4.0f;
+    float posScale = 50.0f;
+
+    int width = -this->mainLocation->map.dimensions[0] + this->mainLocation->map.dimensions[1];
+    int height = -this->mainLocation->map.dimensions[2] + this->mainLocation->map.dimensions[3];
+
+    width = width * posScale;
+    height = height * posScale;
+    int offsetX = -this->mainLocation->map.dimensions[0] *posScale +(WINDOW_WIDTH -width)/2;
+    int offsetY = -this->mainLocation->map.dimensions[2] *posScale +WINDOW_HEIGHT / 8 + (WINDOW_HEIGHT -height)/2;
+    ImVec4 BGcolor(1, 1, 1, 0.3);
+    ImVec4 lineColor(1, 1, 1, 1.0);
+    if (this->mainLocation->map.getAbsoluteGraphPosFromCoords(this->mainLocation->getPlayerPos(), this->mainLocation->size) == pos)
+    {
+        BGcolor = ImVec4(0, 1, 0, 0.5);
+        
+    }
+
+    if (!this->mainLocation->map.map[pos]->visitedByPlayer)
+    {
+        BGcolor = ImVec4(1, 1, 1, 0.05);
+        lineColor = ImVec4(1, 1, 1, 0.3);
+    }
+
+
+    ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.5) + posScale, offsetY + posScale * (pos.second - 0.5) + posScale), ImGui::ColorConvertFloat4ToU32(BGcolor), 0, 0);
+
+    if (this->mainLocation->map.map[pos]->directions[0] != -1)
+    {
+
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.1), offsetY + posScale * (pos.second + 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first + 0.1), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second + 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+    else
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second + 0.5)), ImGui::ColorConvertFloat4ToU32(ImVec4(lineColor)), thickness);
+    }
+
+    if (this->mainLocation->map.map[pos]->directions[1] != -1)
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.1), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first + 0.1), offsetY + posScale * (pos.second - 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+    else
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+
+    if (this->mainLocation->map.map[pos]->directions[2] != -1)
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second + 0.1)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second - 0.1)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+    else
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first + 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+
+    if (this->mainLocation->map.map[pos]->directions[3] != -1)
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second + 0.1)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.1)), ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+    else
+    {
+        ImGui::GetWindowDrawList()->AddLine(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second + 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImGui::ColorConvertFloat4ToU32(lineColor), thickness);
+    }
+}
+
 void GameComponents::renderMenu()
 {
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -166,7 +255,8 @@ void GameComponents::renderGame()
         ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT * 1 / 4));
         if (ImGui::Button("- Powrot do gry -", ImVec2(400, 100)))
             paused = false;
-
+        ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH/5, WINDOW_HEIGHT * 2 / 4));
+        this->drawMap(1.0);
         ImGui::End();
     }
 
@@ -183,6 +273,7 @@ void GameComponents::renderGame()
     }
     else
     {
+        camera.update(45.f, 0.1f, 100.0f);
         mainLocation->process(0, camera, true);
     }
 

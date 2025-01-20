@@ -12,6 +12,7 @@
 class NodeMap
 {
 public:
+	bool visitedByPlayer = false;
 	std::pair <int, int> position;
 	std::vector <NodeMap*> children;
 	int directions[4] = { -1,-1,-1,-1 };
@@ -176,6 +177,36 @@ public:
 		return A;
 
 	}
+	std::pair<int, int> getCenteredGraphPosFromDoubles(std::pair<double, double> thisPosD)
+	{
+		int x, y;
+		if (abs(thisPosD.first - floor(thisPosD.first + 0.5)) <= 0.1)
+			x = floor(thisPosD.first + 0.5);
+		else
+			x = -420;
+
+		if (abs(thisPosD.second - floor(thisPosD.second + 0.5)) <= 0.1)
+			y = floor(thisPosD.second + 0.5);
+		else
+			y = -420;
+		return std::make_pair(x, y);
+	}
+	std::pair<double, double> getDblCenteredPosFromCoords(glm::vec3 coords, glm::vec3 mapSize)
+	{
+		double xD = coords.x / 2 / mapSize.x;
+		double yD = coords.z / 2 / mapSize.z;
+		return std::make_pair(xD, yD);
+	}
+
+	std::pair<int, int> getAbsoluteGraphPosFromCoords(glm::vec3 coords, glm::vec3 mapSize)
+	{
+		double xD = coords.x / 2 / mapSize.x;
+		double yD = coords.z / 2 / mapSize.z;
+
+		int x = floor(xD + 0.5);
+		int y = floor(yD + 0.5);
+		return std::make_pair(x, y);
+	}
 
 private:
 	int getOppositeDirection(int direction)
@@ -231,6 +262,8 @@ private:
 		std::cout << std::endl << std::endl;
 
 	}
+
+
 };
 
 

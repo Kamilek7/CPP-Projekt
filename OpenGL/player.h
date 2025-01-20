@@ -31,191 +31,196 @@ public:
 
 	}
 
-	void process(float dt, Shader& shader, Camera& camera)
+	void process(float dt, Shader& shader, Camera& camera, bool paused)
 	{
 		this->getInfoFromPhys();
 		ingameObject::process(dt, shader, camera);
 
-		bool w =  glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
-		bool a = (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
-		bool s = (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
-		bool d = (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS);
-		bool space = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
-		bool keyboardInput = w || a || s || d;
-
-
-		if (keyboardInput)
+		if (!paused)
 		{
-			glm::vec3 temp = glm::vec3(0, 0, 0);
-			if (w)
+			bool w = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
+			bool a = (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
+			bool s = (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
+			bool d = (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS);
+			bool space = (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS);
+			bool keyboardInput = w || a || s || d;
+
+
+			if (keyboardInput)
 			{
-
-				temp += camera.Orientation;
-			}
-
-			if (a)
-			{
-				temp += -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
-
-			}
-
-			if (s)
-			{
-				temp += -camera.Orientation;
-
-			}
-
-			if (d)
-			{
-				temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
-			}
-
-			
-			if (temp.x != 0 && temp.z != 0)
-			{
-				this->running = true;
-
-				temp = glm::normalize(temp);
-				Vector3 vec(temp.x, 0, temp.z);
-				glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
-				glm::vec3 test = glm::vec3(1, 0, 0);
-
-				float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
-
-				if (temp.z > 0)
+				glm::vec3 temp = glm::vec3(0, 0, 0);
+				if (w)
 				{
-					angle = 8 * acos(1) - angle;
+
+					temp += camera.Orientation;
 				}
 
-				glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
+				if (a)
+				{
+					temp += -glm::normalize(glm::cross(camera.Orientation, camera.Up));;
 
-				this->model.rotation = rot;
+				}
 
-				vec = vec * (glm::length(temp)) / vec.length();
-				body->setLinearVelocity(Vector3(0, this->body->getLinearVelocity().y, 0));
-				body->applyLocalForceAtCenterOfMass(vec * 200);
+				if (s)
+				{
+					temp += -camera.Orientation;
+
+				}
+
+				if (d)
+				{
+					temp += glm::normalize(glm::cross(camera.Orientation, camera.Up));;
+				}
+
+
+				if (temp.x != 0 && temp.z != 0)
+				{
+					this->running = true;
+
+					temp = glm::normalize(temp);
+					Vector3 vec(temp.x, 0, temp.z);
+					glm::vec3 temp1 = glm::vec3(temp.x, 0, temp.z);
+					glm::vec3 test = glm::vec3(1, 0, 0);
+
+					float angle = acos(glm::dot(test, temp1) / (glm::length(test) * glm::length(temp1)));
+
+					if (temp.z > 0)
+					{
+						angle = 8 * acos(1) - angle;
+					}
+
+					glm::quat rot = glm::angleAxis(angle, glm::vec3(0.f, 1.f, 0.f));
+
+					this->model.rotation = rot;
+
+					vec = vec * (glm::length(temp)) / vec.length();
+					body->setLinearVelocity(Vector3(0, this->body->getLinearVelocity().y, 0));
+					body->applyLocalForceAtCenterOfMass(vec * 200);
+				}
+				else
+				{
+					this->running = false;
+				}
+
+
 			}
 			else
 			{
 				this->running = false;
 			}
 
-
-		}
-		else
-		{
-			this->running = false;
-		}
-
-		if (space)
-		{
-			if (abs(body->getLinearVelocity().y) < 0.1)
+			if (space)
 			{
-				if (!collisionTest)
+				if (abs(body->getLinearVelocity().y) < 0.1)
 				{
-					collisionTest = true;
+					if (!collisionTest)
+					{
+						collisionTest = true;
+					}
+					else if (iters < 5)
+					{
+						iters += 1;
+					}
+					else if (iters >= 5)
+					{
+						collisionTest = false;
+						iters = 0;
+						Vector3 vec(0, 1.0, 0);
+						body->applyLocalForceAtCenterOfMass(vec * 700);
+					}
 				}
-				else if (iters < 5)
+				else
 				{
-					iters += 1;
-				}
-				else if (iters >= 5)
-				{
-					collisionTest = false;
 					iters = 0;
-					Vector3 vec(0, 1.0, 0);
-					body->applyLocalForceAtCenterOfMass(vec * 700);
+					collisionTest = false;
 				}
+
+			}
+
+
+			if (cooldown < 6)
+			{
+				cooldown += dt;
+			}
+
+			camera.Position = this->model.translation;
+
+			glfwGetWindowSize(window, &width, &height);
+			double mouseX;
+			double mouseY;
+			glfwGetCursorPos(window, &mouseX, &mouseY);
+			float sensitivity = 100.0f;
+
+			float rotX = sensitivity * (float)(mouseY - (height / 2)) / height;
+			float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
+
+			glm::vec3 newOrientation = glm::rotate(camera.Orientation, glm::radians(-rotX), glm::normalize(glm::cross(camera.Orientation, camera.Up)));
+
+			if (abs(glm::angle(newOrientation, camera.Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+			{
+				camera.Orientation = newOrientation;
+			}
+			camera.Orientation = glm::rotate(camera.Orientation, glm::radians(-rotY), camera.Up);
+			glfwSetCursorPos(window, (width / 2), (height / 2));
+
+
+
+			location = this->model.translation;
+
+			if (this->running)
+			{
+				if (this->animWalkTrigger)
+				{
+					this->animWalkTrigger = false;
+					this->model.playAnimation("running");
+				}
+				if (!this->animIdleTrigger)
+					this->animIdleTrigger = true;
 			}
 			else
 			{
-				iters = 0;
-				collisionTest = false;
+				if (this->animIdleTrigger)
+				{
+					this->animIdleTrigger = false;
+					this->model.playAnimation("breathing");
+				}
+				if (!this->animWalkTrigger)
+					this->animWalkTrigger = true;
 			}
+		}
+	}
+		void getInfoFromPhys()
+		{
+			InfoPack pack = this->phys->getInfoOnBody(this->body);
+
+			this->model.translation = pack.position;
+
 
 		}
-
-
-		if (cooldown < 6)
+		void collidedWith(Body* bd)
 		{
-			cooldown += dt;
+			if (this->body->getLinearVelocity().y < -0.1)
+				((physicsObject*)(bd->getUserData()))->collidedWithPlayer();
 		}
 
-		camera.Position = this->model.translation;
-
-		glfwGetWindowSize(window, &width, &height);
-		double mouseX;
-		double mouseY;
-		glfwGetCursorPos(window, &mouseX, &mouseY);
-		float sensitivity = 100.0f;
-
-		float rotX = sensitivity * (float)(mouseY - (height/ 2)) / height;
-		float rotY = sensitivity * (float)(mouseX - (width / 2)) / width;
-
-		glm::vec3 newOrientation = glm::rotate(camera.Orientation, glm::radians(-rotX), glm::normalize(glm::cross(camera.Orientation, camera.Up)));
-
-		if (abs(glm::angle(newOrientation, camera.Up) - glm::radians(90.0f)) <= glm::radians(85.0f))
+		void collidedWithMonster(int damage)
 		{
-			camera.Orientation = newOrientation;
-		}
-		camera.Orientation = glm::rotate(camera.Orientation, glm::radians(-rotY), camera.Up);
-		glfwSetCursorPos(window, (width / 2), (height / 2));
 
-
-
-		location = this->model.translation;
-
-		if (this->running)
-		{
-			if (this->animWalkTrigger)
+			if (lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
 			{
-				this->animWalkTrigger = false;
-				this->model.playAnimation("running");
+				lives -= damage;
+				std::cout << "Straci³eœ ¿ycie!" << std::endl;
+				cooldown = 0;
 			}
-			if (!this->animIdleTrigger)
-			this->animIdleTrigger = true;
+
 		}
-		else
+
+		bool isDead()
 		{
-			if (this->animIdleTrigger)
-			{
-				this->animIdleTrigger = false;
-				this->model.playAnimation("breathing");
-			}
-			if (!this->animWalkTrigger)
-				this->animWalkTrigger = true;
+			return lives == 0;
 		}
-	}
-	void getInfoFromPhys()
-	{
-		InfoPack pack = this->phys->getInfoOnBody(this->body);
+	
 
-		this->model.translation = pack.position;
-
-
-	}
-	void collidedWith(Body* bd) 
-	{
-		if (this->body->getLinearVelocity().y < -0.1)
-			((physicsObject*)(bd->getUserData()))->collidedWithPlayer();
-	}
-
-	void collidedWithMonster(int damage)
-	{
-		
-		if(lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
-		{
-			lives-=damage;
-			std::cout << "Straci³eœ ¿ycie!" << std::endl;
-			cooldown = 0;
-		}
-		
-	}
-
-	bool isDead()
-	{
-		return lives == 0;
-	}
 
 };
 #endif 

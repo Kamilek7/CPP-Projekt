@@ -9,17 +9,21 @@
 
 class GameComponents
 {
-
+	bool paused = false;
+	bool escPressed = false;
 	int WINDOW_WIDTH = 1000;
 	int WINDOW_HEIGHT = 1000;
 	int REMEMBERED_WIDTH = WINDOW_WIDTH;
 	int REMEMBERED_HEIGHT = WINDOW_HEIGHT;
-	int mode = 1;
+	int mode = 0;
 	unsigned int MAX_FPS = 120;
 	double fpsTime = 1 / double(MAX_FPS);
 	modelImporter importer;
 	Camera camera;
 	Room* mainLocation;
+	Texture mainMenu;
+	ImFont* fontLarger;
+	ImFont* fontSmaller;
 
 	Physics phys;
 
@@ -36,6 +40,10 @@ public:
 	GameComponents();
 	
 	void render();
+	void renderMenu();
+	void renderGame();
+	void renderDeath();
+	void renderEnd();
 	void end();
 };
 

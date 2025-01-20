@@ -70,9 +70,9 @@ public:
 	{
 		return (float)this->player->lives / 100.0f;
 	}
-	void process(float dt, Camera& camera)
+	void process(float dt, Camera& camera, bool paused)
 	{
-		player->process(dt, shaderProgram, camera);
+		player->process(dt, shaderProgram, camera, paused);
 		for (int i = 0; i < objects.size(); i++)
 		{
 			objects[i]->process(dt, shaderProgram, camera);

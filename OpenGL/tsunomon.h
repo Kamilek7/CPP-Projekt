@@ -89,6 +89,7 @@ public:
         double scale = 0.1;
         this->model.scale = glm::vec3(scale, scale, scale);
         this->map = map;
+        this->damage = 15;
     }
 
 };

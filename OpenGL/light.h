@@ -2,11 +2,6 @@
 
 #define LIGHT_H_
 
-#include "vao.h"
-#include "ebo.h"
-#include "camera.h"
-#include "textures.h"
-
 class Light
 {
 public:

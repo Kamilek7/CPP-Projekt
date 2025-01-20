@@ -2,6 +2,7 @@
 #define IMPORTERERR_H
 
 #include "nodeStructure.h"
+
 #include "mesh.h"
 #include "animation.h"
 #include <map>

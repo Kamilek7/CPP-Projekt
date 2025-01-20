@@ -3,6 +3,8 @@
 
 GameComponents::GameComponents()
 {
+
+
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -21,10 +23,24 @@ GameComponents::GameComponents()
     glEnable(GL_CULL_FACE);
     glCullFace(GL_FRONT);
     glFrontFace(GL_CW);
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NoMouse;
+    io.MouseDrawCursor = false;
+	ImGui::StyleColorsDark();
+
+    ImGui_ImplGlfw_InitForOpenGL(window, true);
+    ImGui_ImplOpenGL3_Init("#version 330 core");
+
+
 }
 
 void GameComponents::render()
 {
+    ImGui::SetMouseCursor(ImGuiMouseCursor_None);
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
     glfwPollEvents();
     glfwGetWindowSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
     if (REMEMBERED_WIDTH != WINDOW_WIDTH || REMEMBERED_HEIGHT != WINDOW_HEIGHT)
@@ -32,6 +48,23 @@ void GameComponents::render()
     REMEMBERED_WIDTH = WINDOW_WIDTH; 
     REMEMBERED_HEIGHT = WINDOW_HEIGHT;
 
+    static float f = 0.0f;
+    static int counter = 0;
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoBackground;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    ImGui::Begin("¯ycie gracza",(bool*)0,window_flags);
+    ImGui::SetWindowSize(ImVec2((float)500, (float)100));
+    ImGui::ProgressBar(this->mainLocation->getLifeBarFromPlayer(), ImVec2(0.0f, 0.0f));
+    ImGui::End();
+
+    ImGui::Render();
 
     glClearColor(0.07f, 0.13f, 0.17f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -49,6 +82,7 @@ void GameComponents::render()
 
 	duration = 0;
 	Clock += (float)fpsTime;
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	glfwSwapBuffers(window);
 	previousTime = glfwGetTime();
 }

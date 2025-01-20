@@ -57,7 +57,7 @@ public:
 	}
 
 	virtual void collidedWith(Body* bd) { }
-	virtual void collidedWithMonster() {}
+	virtual void collidedWithMonster(int damage) {}
 	virtual void collidedWithPlayer() {}
 	virtual void setPlayerLocation(glm::vec3* pos) {}
 };

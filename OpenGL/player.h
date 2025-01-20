@@ -17,7 +17,7 @@ class Player :public physicsObject
 	bool collisionTest = false;
 public:
 	glm::vec3 location;
-	int lives = 3;
+	int lives = 100;
 	Player(modelImporter* importer, Physics* phys, GLFWwindow* _window) :physicsObject("resources/bartek/bartek.gltf", importer, phys, glm::vec3(0.1,0.1,0.1))
 	{
 		this->model.animations["breathing"].setUp(true);
@@ -200,12 +200,12 @@ public:
 			((physicsObject*)(bd->getUserData()))->collidedWithPlayer();
 	}
 
-	void collidedWithMonster()
+	void collidedWithMonster(int damage)
 	{
 		
 		if(lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
 		{
-			lives--;
+			lives-=damage;
 			std::cout << "Straci³eœ ¿ycie!" << std::endl;
 			cooldown = 0;
 		}

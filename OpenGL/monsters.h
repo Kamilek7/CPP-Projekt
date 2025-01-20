@@ -7,11 +7,13 @@
 
 class Monster : public NPC
 {
-private:
+protected:
 	int lives = 1; // Liczba zyc potwora (domyslnie 1)
 	double cooldown = 3;
 	double jumpCooldown = 2;
 	double heightOffset = 0.09f;
+
+	int damage = 1;
 
 public:
 	Monster(const char* name, modelImporter* importer, Physics* phys, glm::vec3 size) : NPC(name, importer, phys, size)
@@ -29,7 +31,7 @@ public:
 		vec.z = 25*dif.z;
 
 		((physicsObject*)(bd->getUserData()))->body->applyLocalForceAtCenterOfMass(vec * 200);
-		((physicsObject*)(bd->getUserData()))->collidedWithMonster();
+		((physicsObject*)(bd->getUserData()))->collidedWithMonster(this->damage);
 	}
 
 	virtual void additionalMovement(float dt)
@@ -90,6 +92,10 @@ public:
 			}
 		}
 
+	}
+	int getDamage()
+	{
+		return this->damage;
 	}
 };
 

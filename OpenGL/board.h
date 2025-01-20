@@ -2,13 +2,16 @@
 #define BOARD_H
 	
 #include "room.h"
-
+#include "imgui.h"
+#include "imgui_impl_glfw.h"
+#include "imgui_impl_opengl3.h"
 
 
 class GameComponents
 {
-	int WINDOW_WIDTH = 800;
-	int WINDOW_HEIGHT = 600;
+
+	int WINDOW_WIDTH = 1000;
+	int WINDOW_HEIGHT = 1000;
 	int REMEMBERED_WIDTH = WINDOW_WIDTH;
 	int REMEMBERED_HEIGHT = WINDOW_HEIGHT;
 	int mode = 1;

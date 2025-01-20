@@ -2,7 +2,6 @@
 
 #define ROOM_H_
 
-
 #include "wall.h"
 #include "platform.h"
 #include "scientist.h"
@@ -67,7 +66,10 @@ public:
 
 	}
 	
-
+	float getLifeBarFromPlayer()
+	{
+		return (float)this->player->lives / 100.0f;
+	}
 	void process(float dt, Camera& camera)
 	{
 		player->process(dt, shaderProgram, camera);
@@ -251,7 +253,7 @@ private:
 		walls[walls.size() - 1]->translate(position.x, position.y, position.z);
 	}
 
-	
+
 };
 
 #endif

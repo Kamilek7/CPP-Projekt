@@ -32,8 +32,11 @@ class GameComponents
 	double Clock = 0;
 	double current = 0;
 
-	void drawMap(double zoom);
-	void drawRoom(std::pair<int, int> pos, double zoom);
+	int mapoffsetX = 0;
+	int mapoffsetY = 0;
+
+	void drawMap();
+	void drawRoom(std::pair<int, int> pos, int offsetX, int offsetY, float thickness, float posScale);
 	void renderMenu();
 	void renderGame();
 	void renderDeath();
@@ -43,6 +46,8 @@ public:
 
 	GameComponents();
 	
+	void resetGame();
+
 	void render();
 
 	void end();

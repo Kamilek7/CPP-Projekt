@@ -33,7 +33,7 @@ class Room
 	glm::vec3 lightPos = glm::vec3(0.1f, 1.0f, 0.5f);
 
 	Player* player;
-	
+	Tenemon* boss;
 	
 	glm::vec3 position;
 
@@ -74,9 +74,15 @@ public:
 	{
 		return (float)this->player->lives / 100.0f;
 	}
+	float getLifeOfBoss()
+	{
+		return (float)this->boss->lives / 100.0f;
+	}
 	void process(float dt, Camera& camera, bool paused)
 	{
 		player->process(dt, shaderProgram, camera, paused);
+		if (this->getLifeOfBoss()>0)
+			boss->process(dt, shaderProgram, camera);
 		for (int i = 0; i < objects.size(); i++)
 		{
 			objects[i]->process(dt, shaderProgram, camera);
@@ -154,9 +160,9 @@ private:
 						// Boss room
 						lights.push_back(new Light(glm::vec3(2 * size.x * (x-0.25), 1.5, 2 * size.z * y), bossColor));
 						lights.push_back(new Light(glm::vec3(2 * size.x * (x+0.25), 1.5, 2 * size.z * y), bossColor));
-						objects.push_back(new Tenemon(importer, phys));
-						objects[objects.size() - 1]->translate(2 * x * size.x + (std::rand() % 3) - 1, 0.5, 2 * y * size.z + (std::rand() % 3) - 1);
-						objects[objects.size() - 1]->setPlayerLocation(&this->player->location);
+						boss = new Tenemon(importer, phys);
+						boss->translate(2 * x * size.x + (std::rand() % 3) - 1, 0.5, 2 * y * size.z + (std::rand() % 3) - 1);
+						boss->setPlayerLocation(&this->player->location);
 					}
 
 

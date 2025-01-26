@@ -33,11 +33,29 @@ public:
 
 	void process(float dt, Shader& shader, Camera& camera, bool paused)
 	{
-		this->getInfoFromPhys();
+		
 		ingameObject::process(dt, shader, camera);
+
+
 
 		if (!paused)
 		{
+			this->getInfoFromPhys();
+
+			Vector3 vel = this->body->getLinearVelocity();
+			Vector3 force = this->body->getForce();
+			if (vel.y > 6)
+			{
+				vel.y = 6;
+				this->body->setLinearVelocity(vel);
+			}
+			if (force.y > 700)
+			{
+				this->body->resetForce();
+				force.y = 700;
+				this->body->applyLocalForceAtCenterOfMass(force);
+			}
+
 			bool w = glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS;
 			bool a = (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS);
 			bool s = (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS);
@@ -209,7 +227,6 @@ public:
 			if (lives > 0 && cooldown > 5 && this->body->getLinearVelocity().y >= -0.1)
 			{
 				lives -= damage;
-				std::cout << "Straci³eœ ¿ycie!" << std::endl;
 				cooldown = 0;
 			}
 

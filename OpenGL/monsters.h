@@ -8,7 +8,7 @@
 class Monster : public NPC
 {
 protected:
-	int lives = 1; // Liczba zyc potwora (domyslnie 1)
+	
 	double cooldown = 3;
 	double jumpCooldown = 2;
 	double heightOffset = 0.09f;
@@ -16,6 +16,7 @@ protected:
 	int damage = 1;
 
 public:
+	int lives = 1; // Liczba zyc potwora (domyslnie 1)
 	Monster(const char* name, modelImporter* importer, Physics* phys, glm::vec3 size) : NPC(name, importer, phys, size)
 	{
 		double scale = 0.005;
@@ -47,29 +48,34 @@ public:
 		}
 		else
 		{
-			this->getInfoFromPhys();
 			ingameObject::process(dt, shader, camera);
-			if (this->cooldown >= 0)
+			if (dt != 0)
 			{
-				this->cooldown -= dt;
-			}
-			if (this->jumpCooldown >= 0)
-			{
-				this->jumpCooldown -= dt;
-			}
-
-			this->additionalMovement(dt);
-
-			if (glm::length(*this->playerPos - this->model.translation) < 5)
-			{
-				this->lookAtPlayer();
-				this->followPlayer();
-				if (this->body->getLinearVelocity().y <= 0.1 && this->jumpCooldown <= 0)
+				this->getInfoFromPhys();
+				
+				if (this->cooldown >= 0)
 				{
-					this->body->applyLocalForceAtCenterOfMass(Vector3(0.0, 500.0, 0.0));
-					this->jumpCooldown = 2;
+					this->cooldown -= dt;
+				}
+				if (this->jumpCooldown >= 0)
+				{
+					this->jumpCooldown -= dt;
+				}
+
+				this->additionalMovement(dt);
+
+				if (glm::length(*this->playerPos - this->model.translation) < 5)
+				{
+					this->lookAtPlayer();
+					this->followPlayer();
+					if (this->body->getLinearVelocity().y <= 0.1 && this->jumpCooldown <= 0)
+					{
+						this->body->applyLocalForceAtCenterOfMass(Vector3(0.0, 500.0, 0.0));
+						this->jumpCooldown = 2;
+					}
 				}
 			}
+
 
 		}
 	}

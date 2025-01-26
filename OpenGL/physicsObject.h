@@ -26,8 +26,12 @@ public:
 	};
 	void process(float dt, Shader& shader, Camera& camera)
 	{
-		this->getInfoFromPhys();
-		ingameObject::process(dt, shader, camera);
+		if (dt != 0)
+		{
+			this->getInfoFromPhys();
+			ingameObject::process(dt, shader, camera);
+		}
+
 		
 	}
 	void getInfoFromPhys()

@@ -36,6 +36,13 @@ GameComponents::GameComponents()
 
 }
 
+void GameComponents::resetGame()
+{
+    camera = Camera(&WINDOW_WIDTH, &WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
+    mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, &phys, window);
+    this->mode = 1;
+}
+
 void GameComponents::render()
 {
     if (mode == 0)
@@ -48,9 +55,35 @@ void GameComponents::render()
         this->renderEnd();
 }
 
-void GameComponents::drawMap(double zoom)
+void GameComponents::drawMap()
 {
+ 
+    ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoBackground;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    ImGui::SetNextItemAllowOverlap();
+    int windowPosX = WINDOW_WIDTH / 2 - 400;
+    int windowPosY = WINDOW_HEIGHT * 0.45;
+    int windowHeight = 500;
+    int windowWidth = 800;
+    ImGui::SetNextWindowPos(ImVec2(windowPosX, windowPosY));
+    ImGui::BeginChild("Mapa", ImVec2((float)windowWidth, (float)windowHeight),window_flags);
     
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+
+
+    if (ImGui::IsMousePosValid())
+        if (io.MousePos.x>windowPosX && io.MousePos.x < windowPosX+ windowWidth && io.MousePos.y>windowPosY && io.MousePos.y < windowPosY + windowHeight)
+            if (ImGui::IsMouseDown(0))
+            {
+                this->mapoffsetX += io.MouseDelta.x;
+                this->mapoffsetY += io.MouseDelta.y;
+            }
+                
+
+
+
     for (int y =this->mainLocation->map.dimensions[3]; y >= this->mainLocation->map.dimensions[2]; y--)
     {
         for (int x = this->mainLocation->map.dimensions[0]; x <= this->mainLocation->map.dimensions[1]; x++)
@@ -59,25 +92,38 @@ void GameComponents::drawMap(double zoom)
             std::pair <int, int> pos = std::make_pair(x, y);
             if (this->mainLocation->map.map.find(pos) != this->mainLocation->map.map.end())
             {
-                this->drawRoom(pos, zoom);
+                float thickness = 4.0f;
+                float posScale = 50.0f;
+
+                int width = -this->mainLocation->map.dimensions[0] + this->mainLocation->map.dimensions[1];
+                int height = -this->mainLocation->map.dimensions[2] + this->mainLocation->map.dimensions[3];
+
+                width = width * posScale;
+                height = height * posScale;
+
+                if (abs(this->mapoffsetX) > width / 2)
+                    this->mapoffsetX = width / 2 * this->mapoffsetX / abs(this->mapoffsetX);
+                if (abs(this->mapoffsetY) > height / 2)
+                    this->mapoffsetY = height / 2 * this->mapoffsetY / abs(this->mapoffsetY);
+                int offsetX = -this->mainLocation->map.dimensions[0] * posScale + (WINDOW_WIDTH - width) / 2 + this->mapoffsetX;
+                int offsetY = -this->mainLocation->map.dimensions[2] * posScale + WINDOW_HEIGHT / 8 + (WINDOW_HEIGHT - height) / 2 + this->mapoffsetY;
+                this->drawRoom(pos, offsetX, offsetY, thickness, posScale);
             }
         }
     }
+
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(windowPosX, windowPosY), ImVec2(windowPosX + windowWidth, windowPosY), ImGui::ColorConvertFloat4ToU32(ImVec4 (1, 1, 1, 1.0)), 4.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(windowPosX+windowWidth, windowPosY), ImVec2(windowPosX + windowWidth, windowPosY+ windowHeight), ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 1.0)), 4.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(windowPosX + windowWidth, windowPosY+windowHeight), ImVec2(windowPosX, windowPosY + windowHeight), ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 1.0)), 4.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(windowPosX, windowPosY+windowHeight), ImVec2(windowPosX, windowPosY), ImGui::ColorConvertFloat4ToU32(ImVec4(1, 1, 1, 1.0)), 4.0f);
+    ImGui::EndChild();
 }
 
-void GameComponents::drawRoom(std::pair <int, int> pos, double zoom)
+void GameComponents::drawRoom(std::pair <int, int> pos, int offsetX, int offsetY, float thickness, float posScale)
 {
 
-    float thickness = 4.0f;
-    float posScale = 50.0f;
 
-    int width = -this->mainLocation->map.dimensions[0] + this->mainLocation->map.dimensions[1];
-    int height = -this->mainLocation->map.dimensions[2] + this->mainLocation->map.dimensions[3];
 
-    width = width * posScale;
-    height = height * posScale;
-    int offsetX = -this->mainLocation->map.dimensions[0] *posScale +(WINDOW_WIDTH -width)/2;
-    int offsetY = -this->mainLocation->map.dimensions[2] *posScale +WINDOW_HEIGHT / 8 + (WINDOW_HEIGHT -height)/2;
     ImVec4 BGcolor(1, 1, 1, 0.3);
     ImVec4 lineColor(1, 1, 1, 1.0);
     if (this->mainLocation->map.getAbsoluteGraphPosFromCoords(this->mainLocation->getPlayerPos(), this->mainLocation->size) == pos)
@@ -85,13 +131,11 @@ void GameComponents::drawRoom(std::pair <int, int> pos, double zoom)
         BGcolor = ImVec4(0, 1, 0, 0.5);
         
     }
-
-    if (!this->mainLocation->map.map[pos]->visitedByPlayer)
+    else if (!this->mainLocation->map.map[pos]->visitedByPlayer)
     {
         BGcolor = ImVec4(1, 1, 1, 0.05);
         lineColor = ImVec4(1, 1, 1, 0.3);
     }
-
 
     ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(offsetX + posScale * (pos.first - 0.5), offsetY + posScale * (pos.second - 0.5)), ImVec2(offsetX + posScale * (pos.first - 0.5) + posScale, offsetY + posScale * (pos.second - 0.5) + posScale), ImGui::ColorConvertFloat4ToU32(BGcolor), 0, 0);
 
@@ -157,12 +201,13 @@ void GameComponents::renderMenu()
     window_flags |= ImGuiWindowFlags_NoBackground;
     window_flags |= ImGuiWindowFlags_NoTitleBar;
     window_flags |= ImGuiWindowFlags_NoResize;
-
+    window_flags != ImGuiWindowFlags_NoScrollbar;
+    window_flags |= ImGuiWindowFlags_NoMove;
 
     ImGui::Begin("Menu Glowne", (bool*)0, window_flags);
     ImGui::SetWindowPos(ImVec2(((float)WINDOW_WIDTH- WINDOW_HEIGHT)/2, (float)0));
-    ImGui::SetWindowSize(ImVec2((float)WINDOW_WIDTH, (float)WINDOW_HEIGHT));
-    ImGui::Image((ImTextureID)(intptr_t)1, ImVec2(WINDOW_HEIGHT, WINDOW_HEIGHT));
+    ImGui::SetWindowSize(ImVec2((float)WINDOW_WIDTH, (float)WINDOW_HEIGHT-5));
+    ImGui::Image((ImTextureID)(intptr_t)1, ImVec2(WINDOW_HEIGHT, WINDOW_HEIGHT-30));
     static bool clicked = false;
     ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH/2-200, WINDOW_HEIGHT*3/4));
     
@@ -172,7 +217,7 @@ void GameComponents::renderMenu()
 
     if (clicked)
     {
-        mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.0, 4.0), &importer, &phys, window);
+        mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, &phys, window);
         this->mode = 1;
     }
     
@@ -199,10 +244,115 @@ void GameComponents::renderMenu()
 
 void GameComponents::renderEnd()
 {
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    glfwPollEvents();
+    glfwGetWindowSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
+    if (REMEMBERED_WIDTH != WINDOW_WIDTH || REMEMBERED_HEIGHT != WINDOW_HEIGHT)
+        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    REMEMBERED_WIDTH = WINDOW_WIDTH;
+    REMEMBERED_HEIGHT = WINDOW_HEIGHT;
+    static float f = 0.0f;
+    static int counter = 0;
 
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGuiWindowFlags window_flags = 0;
+
+    window_flags |= ImGuiWindowFlags_NoBackground;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags != ImGuiWindowFlags_NoScrollbar;
+    window_flags |= ImGuiWindowFlags_NoMove;
+
+    ImGui::Begin("Smierc", (bool*)0, window_flags);
+
+    ImGui::SetWindowPos(ImVec2((float)0, (float)0));
+    ImGui::SetWindowSize(ImVec2((float)WINDOW_WIDTH, (float)WINDOW_HEIGHT));
+    ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT * 1 / 4));
+    ImGui::Text("Wygrales!");
+    ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT * 3 / 4));
+    if (ImGui::Button("- Zagraj jeszcze raz -", ImVec2(400, 100)))
+    {
+        this->resetGame();
+
+    }
+
+    ImGui::End();
+
+    ImGui::Render();
+
+    glClearColor(0.00f, 0.00f, 0.00f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Ograniczenie FPS
+    while (duration <= fpsTime)
+    {
+        current = glfwGetTime();
+        duration = current - previousTime;
+    }
+
+    duration = 0;
+    Clock += (float)fpsTime;
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    glfwSwapBuffers(window);
+    previousTime = glfwGetTime();
 }
 void GameComponents::renderDeath()
 {
+    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    glfwPollEvents();
+    glfwGetWindowSize(window, &WINDOW_WIDTH, &WINDOW_HEIGHT);
+    if (REMEMBERED_WIDTH != WINDOW_WIDTH || REMEMBERED_HEIGHT != WINDOW_HEIGHT)
+        glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+    REMEMBERED_WIDTH = WINDOW_WIDTH;
+    REMEMBERED_HEIGHT = WINDOW_HEIGHT;
+    static float f = 0.0f;
+    static int counter = 0;
+
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGuiWindowFlags window_flags = 0;
+
+    window_flags |= ImGuiWindowFlags_NoBackground;
+    window_flags |= ImGuiWindowFlags_NoTitleBar;
+    window_flags |= ImGuiWindowFlags_NoResize;
+    window_flags != ImGuiWindowFlags_NoScrollbar;
+    window_flags |= ImGuiWindowFlags_NoMove;
+
+    ImGui::Begin("Smierc", (bool*)0, window_flags);
+
+    ImGui::SetWindowPos(ImVec2((float)0, (float)0));
+    ImGui::SetWindowSize(ImVec2((float)WINDOW_WIDTH, (float)WINDOW_HEIGHT));
+    ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 100, WINDOW_HEIGHT * 1 / 4));
+    ImGui::Text("Przegrales!");
+    ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT * 3 / 4));
+    if (ImGui::Button("- Zacznij od nowa -", ImVec2(400, 100)))
+    {
+        this->resetGame();
+
+    }
+
+    ImGui::End();
+
+    ImGui::Render();
+
+    glClearColor(0.00f, 0.00f, 0.00f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // Ograniczenie FPS
+    while (duration <= fpsTime)
+    {
+        current = glfwGetTime();
+        duration = current - previousTime;
+    }
+
+    duration = 0;
+    Clock += (float)fpsTime;
+    ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+    glfwSwapBuffers(window);
+    previousTime = glfwGetTime();
 
 }
 void GameComponents::renderGame()
@@ -232,6 +382,8 @@ void GameComponents::renderGame()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
     ImGuiWindowFlags window_flags = 0;
+    window_flags |= ImGuiWindowFlags_NoMove;
+    window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
     window_flags |= ImGuiWindowFlags_NoBackground;
     window_flags |= ImGuiWindowFlags_NoTitleBar;
     window_flags |= ImGuiWindowFlags_NoResize;
@@ -248,6 +400,8 @@ void GameComponents::renderGame()
         ImGuiWindowFlags window_flags = 0;
         window_flags |= ImGuiWindowFlags_NoTitleBar;
         window_flags |= ImGuiWindowFlags_NoResize;
+        window_flags |= ImGuiWindowFlags_NoMove;
+        window_flags |= ImGuiWindowFlags_NoBringToFrontOnFocus;
         ImGui::Begin("Menu W Grze", (bool*)0, window_flags);
         
         ImGui::SetWindowPos(ImVec2((float)0, (float)0));
@@ -255,8 +409,8 @@ void GameComponents::renderGame()
         ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH / 2 - 200, WINDOW_HEIGHT * 1 / 4));
         if (ImGui::Button("- Powrot do gry -", ImVec2(400, 100)))
             paused = false;
-        ImGui::SetCursorScreenPos(ImVec2(WINDOW_WIDTH/5, WINDOW_HEIGHT * 2 / 4));
-        this->drawMap(1.0);
+        
+        this->drawMap();
         ImGui::End();
     }
 
@@ -265,11 +419,22 @@ void GameComponents::renderGame()
 
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (this->mainLocation->getLifeBarFromPlayer() <= 0.0f)
+    {
+        this->mode = 2;
+    }
+    else if (this->mainLocation->getLifeOfBoss() <= 0.0f)
+    {
+        this->mode = 3;
+    }
     if (!paused)
     {
+        std::pair<int, int> playerPos = this->mainLocation->map.getAbsoluteGraphPosFromCoords(this->mainLocation->getPlayerPos(), this->mainLocation->size);
+        this->mainLocation->map.map[playerPos]->visitedByPlayer = true;
         phys.process(fpsTime);
         camera.update(45.f, 0.1f, 100.0f);
         mainLocation->process(fpsTime, camera, false);
+
     }
     else
     {

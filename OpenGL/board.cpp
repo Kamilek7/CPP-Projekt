@@ -4,7 +4,7 @@
 GameComponents::GameComponents()
 {
 
-
+    this->phys = new Physics();
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -32,15 +32,17 @@ GameComponents::GameComponents()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
 
-    mainMenu = Texture("resources/textures/flop.png", "None",1);
+    mainMenu = Texture("resources/textures/title.png", "None",1);
 
 }
 
 void GameComponents::resetGame()
 {
+    this->phys = new Physics();
     camera = Camera(&WINDOW_WIDTH, &WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
-    mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, &phys, window);
+    mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, phys, window);
     this->mode = 1;
+    
 }
 
 void GameComponents::render()
@@ -217,7 +219,7 @@ void GameComponents::renderMenu()
 
     if (clicked)
     {
-        mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, &phys, window);
+        mainLocation = new Room(glm::vec3(0, -0.3, 0), glm::vec3(4.0, 1.2, 4.0), &importer, phys, window);
         this->mode = 1;
     }
     
@@ -431,7 +433,7 @@ void GameComponents::renderGame()
     {
         std::pair<int, int> playerPos = this->mainLocation->map.getAbsoluteGraphPosFromCoords(this->mainLocation->getPlayerPos(), this->mainLocation->size);
         this->mainLocation->map.map[playerPos]->visitedByPlayer = true;
-        phys.process(fpsTime);
+        phys->process(fpsTime);
         camera.update(45.f, 0.1f, 100.0f);
         mainLocation->process(fpsTime, camera, false);
 

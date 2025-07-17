@@ -25,7 +25,7 @@ class GameComponents
 	ImFont* fontLarger;
 	ImFont* fontSmaller;
 
-	Physics phys;
+	Physics* phys;
 
 	double previousTime = 0;
 	double duration = 0;

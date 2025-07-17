@@ -47,6 +47,11 @@ public:
 	Room(glm::vec3 position, glm::vec3 size, modelImporter* importer, Physics* phys, GLFWwindow* window)
 	{
 
+		objects = {};
+		walls = {};
+		platforms = {};
+		lights = {};
+
 		this->size = size;
 		this->position = position;
 

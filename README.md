@@ -15,3 +15,6 @@
 ## 06.01.25r. - Dorzucenie animacji do modeli
 ## 13.01.25r. - Dalsze oprogramowanie wrogow i NPC - koniec gry po bossie
 ## 20.01.25r. - Dodanie jakiegos GUI
+
+<img width="995" height="1000" alt="obraz" src="https://github.com/user-attachments/assets/31208df2-5071-4876-addc-074ef59ab638" />
+<img width="1917" height="1043" alt="obraz" src="https://github.com/user-attachments/assets/cfc3b6fd-eb92-4e9d-b98d-ff9a7b5d6e8f" />

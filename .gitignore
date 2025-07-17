@@ -90,10 +90,6 @@
 /OpenGL/x64/Release/vao.obj
 /OpenGL/x64/Release/vbo.obj
 /OpenGL/x64/Release/vc143.pdb
-/x64/Debug/OpenGL.exe
-/x64/Debug/OpenGL.pdb
-/x64/Release/OpenGL.exe
-/x64/Release/OpenGL.pdb
 *.wsuo
 /OpenGL/x64/Debug/board.obj
 /OpenGL/x64/Debug/import.obj

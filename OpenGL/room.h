@@ -85,6 +85,9 @@ public:
 	}
 	void process(float dt, Camera& camera, bool paused)
 	{
+
+		glUniform3f(glGetUniformLocation(shaderProgram.program, "playerPos"), player->location.x, player->location.y, player->location.z);
+
 		player->process(dt, shaderProgram, camera, paused);
 		if (this->getLifeOfBoss()>0)
 			boss->process(dt, shaderProgram, camera);

@@ -17,10 +17,6 @@ GameComponents::GameComponents()
     glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
     camera = Camera(&WINDOW_WIDTH, &WINDOW_HEIGHT, glm::vec3(0.0f, 0.2f, 0.5f));
-
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glFrontFace(GL_CW);
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
@@ -397,6 +393,7 @@ void GameComponents::renderGame()
     ImGui::PopFont();
     ImGui::End();
     ImGui::SetNextWindowBgAlpha(0.3);
+
     if (paused)
     {
         ImGuiWindowFlags window_flags = 0;
@@ -429,6 +426,8 @@ void GameComponents::renderGame()
     {
         this->mode = 3;
     }
+
+
     if (!paused)
     {
         std::pair<int, int> playerPos = this->mainLocation->map.getAbsoluteGraphPosFromCoords(this->mainLocation->getPlayerPos(), this->mainLocation->size);

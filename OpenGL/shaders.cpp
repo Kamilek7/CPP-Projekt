@@ -38,14 +38,14 @@ Shader::Shader(const char* vertFile, const char* fragFile, int lightNum)
 	glShaderSource(fragmentShader, 1, &fragSource, NULL);
 	glCompileShader(fragmentShader);
 
-	//int bufflen;
-	//glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
-	//GLchar* log_string = new char[bufflen + 1];
-	//glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
-	//std::cout << log_string << std::endl << std::endl;
+	int bufflen;
+	glGetShaderiv(fragmentShader, GL_INFO_LOG_LENGTH, &bufflen);
+	GLchar* log_string = new char[bufflen + 1];
+	glGetShaderInfoLog(fragmentShader, bufflen, 0, log_string);
+	std::cout << log_string << std::endl << std::endl;
 
 	//glGetShaderiv(vertexShader, GL_INFO_LOG_LENGTH, &bufflen);
-	//log_string = new char[bufflen + 1];
+	//GLchar * log_string = new char[bufflen + 1];
 	//glGetShaderInfoLog(vertexShader, bufflen, 0, log_string);
 	//std::cout << log_string;
 
